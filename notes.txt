@@ -1,0 +1,12 @@
+coinmarketcap api key:
+    8f2300f8-ebae-4bcb-9e8e-4405c0fbeb2e
+
+telegram token:
+    6634826109:AAElkKIzaTJuWfeE0f-Dug8wPTKel8WhnjU
+
+docker run -d -p 7777:3306
+--name mysql-coin-bot
+-e MYSQL_ROOT_PASSWORD=getmycoins
+-e MYSQL_USER=kabgig
+-e MYSQL_PASSWORD=getmycoins
+-e MYSQL_DATABASE=mydatabase mysql:8.0
