@@ -1,10 +1,10 @@
 package com.kabgig.CoinBot.CoinMarketCap;
 
+import com.kabgig.CoinBot.CoinMarketCap.service.CoinMarketCapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class CoinStarter {
     @Autowired
     private CoinMarketCapService coinMarketCapService;

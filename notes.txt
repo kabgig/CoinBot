@@ -5,7 +5,7 @@ telegram token:
     6634826109:AAElkKIzaTJuWfeE0f-Dug8wPTKel8WhnjU
 
 docker run -d -p 7777:3306
---name mysql-coin-bot
+--name mysql-coin-botService
 -e MYSQL_ROOT_PASSWORD=getmycoins
 -e MYSQL_USER=kabgig
 -e MYSQL_PASSWORD=getmycoins
