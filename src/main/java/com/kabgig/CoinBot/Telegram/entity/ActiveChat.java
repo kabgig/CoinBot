@@ -11,6 +11,6 @@ public class ActiveChat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //Уникальный идентификатор в системе нашего бота
 
-    @Column(name = "CHAT_ID")
+    @Column(name = "chat_id")
     private Long chatId; //Уникальный идентификатор в системе Telegram
 }

@@ -1,6 +1,8 @@
 package com.kabgig.CoinBot.Telegram.service;
 
 import com.kabgig.CoinBot.CoinMarketCap.service.CoinMarketCapService;
+import com.kabgig.CoinBot.Telegram.entity.ActiveChat;
+import com.kabgig.CoinBot.Telegram.repository.ActiveChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -15,6 +17,8 @@ import static com.kabgig.CoinBot.Utils.Logger.lgr;
 public class BotService extends TelegramLongPollingBot {
     @Autowired
     private CoinMarketCapService coinMarketCapService;
+    @Autowired
+    private ActiveChatRepository activeChatRepository;
 
     public static final String COINS = "/coins";
 
@@ -34,7 +38,16 @@ public class BotService extends TelegramLongPollingBot {
         var userid = msg.getChatId();
 
         var response = proceedCommand(msg);
+        checkUser(userid);
         sendText(userid, response);
+    }
+
+    private void checkUser(Long userid) {
+        if(activeChatRepository.findByChatId(userid) == null){
+            ActiveChat activeChat = new ActiveChat();
+            activeChat.setChatId(userid);
+            activeChatRepository.save(activeChat);
+        }
     }
 
     private String proceedCommand(Message msg) {

@@ -1,0 +1,4 @@
+CREATE TABLE active_chat (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    chat_id BIGINT NOT NULL
+);

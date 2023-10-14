@@ -1,6 +1,9 @@
 package com.kabgig.CoinBot.CoinMarketCap.service;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kabgig.CoinBot.CoinMarketCap.entity.CurrentData;
 import com.kabgig.CoinBot.CoinMarketCap.repository.CurrentDataRepository;
 import org.apache.http.HttpEntity;
@@ -16,15 +19,15 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static com.kabgig.CoinBot.CoinMarketCap.utils.utils.*;
 import static com.kabgig.CoinBot.Utils.Logger.lgr;
 
 @Service
@@ -33,55 +36,43 @@ public class CoinMarketCapService {
     @Autowired
     private CurrentDataRepository currentDataRepository;
 
-    private static String apiKey = "b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c";
-    private static String uri = "https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-
+    private static String apiKeyDummy = "b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c";
+    private static String apiKeyReal = "8f2300f8-ebae-4bcb-9e8e-4405c0fbeb2e";
+    private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+    private List<CurrentData> currentDataArray = null;
     public String getCoinNameAndPrice() {
-        String jsonResponse = getCoinData();
-        lgr().info("GOT JSON RESPONSE");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
-            writer.write(jsonResponse);
-            System.out.println("String written to the file.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        lgr().info("SAVED RESPONSE TO FILE: output.txt");
-
-        JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
-        JsonArray data = jsonObject.getAsJsonArray("data");
         String result = "";
-        for (int i = 0; i < data.size(); i++) {
-            JsonElement jsonElement = data.get(i);
-            String name = jsonElement.getAsJsonObject().get("name").getAsString();
-            String symbol = jsonElement.getAsJsonObject().get("symbol").getAsString();
-            String price = jsonElement
-                    .getAsJsonObject().get("quote")
-                    .getAsJsonObject().get("USD")
-                    .getAsJsonObject().get("price").getAsString();
-            System.out.println("Name: " + name);
-            System.out.println("Symbol: " + symbol);
-            System.out.println("Price: " + price);
+        List<CurrentData> coinData = getCoinData();
+        lgr().info("GOT coinData LIST");
+        saveToLogFile(coinData);
+
+        for (int i = 0; i < coinData.size(); i++) {
+            CurrentData currentData = coinData.get(i);
+            String name = currentData.getName();
+            String symbol = currentData.getSymbol();
+            double price = currentData.getUsd_price();
             System.out.println();
-            result = "Name: " + name + "\nSymbol: " + symbol + "\nPrice: " + price;
+            result = "Name: " + name + "\nSymbol: " + symbol + "\nPrice: " + price + "$";
+            System.out.println(result);
         }
         return result;
     }
 
-    public String getCoinData() {
+    public List<CurrentData> getCoinData() {
         String result = "";
+        if(currentDataArray != null && !currentDataArray.isEmpty())
+            return currentDataArray;
         //check if the date is NOT current,
-        if (true) {
-            //fetch data from coinmarketcap
+        if (!isCurrentdate()) {
             try {
-                result = makeAPICall(uri, getParameters());
-                lgr().info("DID makeAPICall and got result " + result);
+                result = makeAPICall(uriLatest, getParameters());
+                lgr().info("EXECUTED makeApiCall() AND GOT RESULT: " + result);
                 JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
                 JsonArray data = jsonObject.getAsJsonArray("data");
                 lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING: " + data);
                 try {
-                    List<CurrentData> currentDataArray = mapToEntityArray(data);
+                    currentDataArray = mapToEntityArray(data);
                     lgr().info("STARTING SAVING DATA TO REPOSITORY");
-                    // Iterate through the array and save each entity to the database
                     for (CurrentData currentData : currentDataArray) {
                         lgr().info("STARTING SAVING ENTITY: " + currentData);
                         currentDataRepository.save(currentData);
@@ -96,9 +87,30 @@ public class CoinMarketCapService {
                 System.out.println("Error: Invalid URL " + e.toString());
             }
         } else {
-            // skip fetching and request db currentData
+            currentDataArray = currentDataRepository.findAll();
+            lgr().info("FETCHED DATA FROM DB");
         }
-        return result;
+        return currentDataArray;
+    }
+
+    private boolean isCurrentdate() {
+        boolean isCurrent;
+        Optional<CurrentData> byId = currentDataRepository.findById(1L);
+        if (byId.isEmpty()) {
+            lgr().info("THE DATE IS NOT CURRENT");
+            return false;
+        }
+        var last = byId.get().getLastUpdated();
+        var now = LocalDateTime.now();
+        if(now.getMonth() == last.getMonth() &&
+           now.getDayOfMonth() == last.getDayOfMonth()){
+            isCurrent = true;
+            lgr().info("THE DATE IS CURRENT");
+        } else {
+            lgr().info("THE DATE IS NOT CURRENT");
+            isCurrent = false;
+        }
+        return isCurrent;
     }
 
     private List<CurrentData> mapToEntityArray(JsonArray data) {
@@ -153,16 +165,8 @@ public class CoinMarketCapService {
 
             result.add(currentData);
             lgr().info("ADDED CURRENT DATA TO LIST: " + currentData);
-
         }
         return result;
-    }
-
-    private LocalDateTime convertToLDT(String inputString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        // Parse the input String to LocalDateTime using the specified format
-        return LocalDateTime.parse(inputString, formatter);
-
     }
 
     public static String makeAPICall(String uri, List<NameValuePair> parameters)
@@ -176,7 +180,7 @@ public class CoinMarketCapService {
         HttpGet request = new HttpGet(query.build());
 
         request.setHeader(HttpHeaders.ACCEPT, "application/json");
-        request.addHeader("X-CMC_PRO_API_KEY", apiKey);
+        request.addHeader("X-CMC_PRO_API_KEY", apiKeyReal);
 
         CloseableHttpResponse response = client.execute(request);
 
@@ -198,18 +202,6 @@ public class CoinMarketCapService {
         paratmers.add(new BasicNameValuePair("limit", "5000"));
         paratmers.add(new BasicNameValuePair("convert", "USD"));
         return paratmers;
-    }
-
-    private String convertTagsArray(JsonArray tagsArray) {
-        StringBuilder tagsStringBuilder = new StringBuilder();
-        for (JsonElement tagElement : tagsArray) {
-            String tag = tagElement.getAsString();
-            tagsStringBuilder.append(tag).append(",");
-        }
-        if (tagsStringBuilder.length() > 0) {
-            tagsStringBuilder.setLength(tagsStringBuilder.length() - 1);
-        }
-        return tagsStringBuilder.toString();
     }
 }
 
