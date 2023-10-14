@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CurrentDataRepository extends JpaRepository<CurrentData,Long> {
+    CurrentData findBySymbol(String symbol);
 
 }

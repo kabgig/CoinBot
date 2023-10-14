@@ -1,0 +1,5 @@
+CREATE TABLE user_coins (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    chat_id BIGINT NOT NULL,
+    coin_id BIGINT NOT NULL
+);

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kabgig.CoinBot.CoinMarketCap.entity.CurrentData;
+import com.kabgig.CoinBot.CoinMarketCap.entity.UserCoins;
 import com.kabgig.CoinBot.CoinMarketCap.repository.CurrentDataRepository;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class CoinMarketCapService {
     private List<CurrentData> currentDataArray = null;
     public String getCoinNameAndPrice() {
         String result = "";
-        List<CurrentData> coinData = getCoinData();
+        List<CurrentData> coinData = getCoinsData();
         lgr().info("GOT coinData LIST");
         saveToLogFile(coinData);
 
@@ -52,13 +52,13 @@ public class CoinMarketCapService {
             String symbol = currentData.getSymbol();
             double price = currentData.getUsd_price();
             System.out.println();
-            result = "Name: " + name + "\nSymbol: " + symbol + "\nPrice: " + price + "$";
+            result = "Name: " + name + " Symbol: " + symbol + " Price: " + price + "$";
             System.out.println(result);
         }
         return result;
     }
 
-    public List<CurrentData> getCoinData() {
+    public List<CurrentData> getCoinsData() {
         String result = "";
         if(currentDataArray != null && !currentDataArray.isEmpty())
             return currentDataArray;
@@ -202,6 +202,32 @@ public class CoinMarketCapService {
         paratmers.add(new BasicNameValuePair("limit", "5000"));
         paratmers.add(new BasicNameValuePair("convert", "USD"));
         return paratmers;
+    }
+
+    public List<String> getCoinSymbolList() {
+        List<String> symbols = new ArrayList<>();
+        List<CurrentData> all = currentDataRepository.findAll();
+        for(var i : all){
+            symbols.add(i.getSymbol());
+        }
+        return symbols;
+    }
+
+    public CurrentData getOneCoinData(String cmd) {
+        return currentDataRepository.findBySymbol(cmd);
+    }
+
+    public List<CurrentData> getCustomCoinList(List<UserCoins> userCoins) {
+        List<Long> coinIds = new ArrayList<>();
+        for(var item : userCoins) coinIds.add(item.getId());
+
+        List<CurrentData> coinList = new ArrayList<>();
+        List<CurrentData> all = currentDataRepository.findAll();
+        for (var currentData : all){
+            if (coinIds.contains(currentData.getId()))
+                coinList.add(currentData);
+        }
+        return coinList;
     }
 }
 

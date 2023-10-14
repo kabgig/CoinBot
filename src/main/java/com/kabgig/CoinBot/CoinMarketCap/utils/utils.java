@@ -31,14 +31,14 @@ public class utils {
         }
         return tagsStringBuilder.toString();
     }
-
     public static void saveToLogFile(List<CurrentData> currentDataList) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
             writer.write(currentDataList.toString());
-            System.out.println("currentDataList IS WRITTEN TO THE LOG FILE: output.txt");
+            lgr().info("currentDataList IS WRITTEN TO THE LOG FILE: output.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
         lgr().info("SAVED RESPONSE TO FILE: output.txt");
     }
+
 }
