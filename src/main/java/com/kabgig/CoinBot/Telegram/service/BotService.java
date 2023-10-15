@@ -23,6 +23,8 @@ public class BotService extends TelegramLongPollingBot {
     private CoinMarketCapService coinMarketCapService;
     @Autowired
     private UserCoinsService userCoinsService;
+    @Autowired
+    private ActiveChatService activeChatService;
 
     //COMMANDS
     public static final String START = "/start";
@@ -31,7 +33,7 @@ public class BotService extends TelegramLongPollingBot {
     public static final String DELETE = "/delete";
     public static final String MENU =
             "Commands menu:\n" +
-            "/mycoins - check all your coins\n" +
+            "/mycoins - check my coins\n" +
             "/addcoins - add coins\n" +
             "/delete - delete coin";
 
@@ -49,7 +51,7 @@ public class BotService extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         var msg = update.getMessage();
         var userid = msg.getChatId();
-        // checkUser(userid);
+        activeChatService.checkUser(userid);
 
         var response = proceedCommand(msg);
         sendText(userid, response);
@@ -66,7 +68,7 @@ public class BotService extends TelegramLongPollingBot {
             return "In order to subscribe send ONE coin symbol i.e. BTC or ETH";
 
         if (cmd.equals(MYCOINS))
-            return getMyCoins(msg) + "\n ---- \n" + MENU;
+            return getMyCoins(msg.getChatId()) + "\n ---- \n" + MENU;
 
         if(cmd.equals(DELETE))
             return "Which coin you want to delete?\n" + getDeleteMenu(msg);
@@ -98,17 +100,29 @@ public class BotService extends TelegramLongPollingBot {
         return resultMenu;
     }
 
-    private String getMyCoins(Message msg) {
+    public String getMyCoins(Long chatId) {
         String result = "";
-        List<UserCoins> userCoins = userCoinsService.getUserCoins(msg.getChatId());
+        List<UserCoins> userCoins = userCoinsService.getUserCoins(chatId);
         List<CurrentData> customCoinList = coinMarketCapService.getCustomCoinList(userCoins);
+
         for (var item : customCoinList) {
+            double h1 = roundDouble(item.getUsd_percentChange1h());
+            double h24 = roundDouble(item.getUsd_percentChange24h());
+            double d7 = roundDouble(item.getUsd_percentChange7d());
             result = result + "\n\n" +
                     item.getName() + " " +
                     item.getSymbol() + "\n" +
-                    item.getUsd_price() + " $";
+                    roundDouble(item.getUsd_price()) + " $\n" +
+                    "%1h " + h1 + "\n" +
+                    "%24h " + h24 + "\n" +
+                    "%7d " + d7 + "\n" +
+                    "-------";
         }
         return result;
+    }
+
+    private static double roundDouble(double item) {
+        return Math.round(item * 100.0) / 100.0;
     }
 
     private String processCoinSymbolAndSubscribe(String cmd, Message msg) {

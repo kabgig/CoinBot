@@ -41,42 +41,19 @@ public class CoinMarketCapService {
     private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     private List<CurrentData> currentDataArray = null;
 
-    public List<CurrentData> getCoinsData() {
-        String result = "";
-        if (currentDataArray != null && !currentDataArray.isEmpty())
-            return currentDataArray;
-        //check if the date is NOT current,
-        if (!isCurrentdate()) {
-            try {
-                result = makeAPICall(uriLatest, getParameters());
-                lgr().info("EXECUTED makeApiCall() AND GOT RESULT: " + result);
-                JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
-                JsonArray data = jsonObject.getAsJsonArray("data");
-                lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING: " + data);
-                try {
-                    currentDataArray = mapToEntityArray(data);
-                    lgr().info("STARTING SAVING DATA TO REPOSITORY");
-                    for (CurrentData currentData : currentDataArray) {
-                        lgr().info("STARTING SAVING ENTITY: " + currentData);
-                        currentDataRepository.save(currentData);
-                        System.out.println(currentData);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                System.out.println("Error: can't access content - " + e.toString());
-            } catch (URISyntaxException e) {
-                System.out.println("Error: Invalid URL " + e.toString());
-            }
-        } else {
-            currentDataArray = currentDataRepository.findAll();
-            lgr().info("FETCHED DATA FROM DB");
-        }
-        return currentDataArray;
-    }
+    //public List<CurrentData> getCoinsData() {
+//        if (!isCurrentdate()) {
+//            updateDatabase();
+//            lgr().info("DATABASE IS REFRESHED");
+//        } else if(currentDataArray != null || !currentDataArray.isEmpty()){}
+//        else {
+//            currentDataArray = currentDataRepository.findAll();
+//            lgr().info("FETCHED DATA FROM DB");
+//        }
+//        return currentDataArray;
+//    }
 
-    private boolean isCurrentdate() {
+    public boolean isCurrentdate() {
         boolean isCurrent;
         Optional<CurrentData> byId = currentDataRepository.findById(1L);
         if (byId.isEmpty()) {
@@ -200,8 +177,6 @@ public class CoinMarketCapService {
         return currentDataRepository.findBySymbol(cmd);
     }
 
-
-
     public List<CurrentData> getCustomCoinList(List<UserCoins> userCoins) {
         List<Long> coinIds = new ArrayList<>();
         for (var item : userCoins)
@@ -222,6 +197,31 @@ public class CoinMarketCapService {
 
     public CurrentData getOneCoinBySymbol(String coinSymbol) {
         return currentDataRepository.findBySymbol(coinSymbol);
+    }
+
+    public void updateDatabase() {
+        try {
+            String result = makeAPICall(uriLatest, getParameters());
+            lgr().info("EXECUTED makeApiCall() AND GOT RESULT: " + result);
+            JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
+            JsonArray data = jsonObject.getAsJsonArray("data");
+            lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING: " + data);
+            try {
+                currentDataArray = mapToEntityArray(data);
+                lgr().info("STARTING SAVING DATA TO REPOSITORY");
+                for (CurrentData currentData : currentDataArray) {
+                    lgr().info("STARTING SAVING ENTITY: " + currentData);
+                    currentDataRepository.save(currentData);
+                    System.out.println(currentData);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            System.out.println("Error: can't access content - " + e.toString());
+        } catch (URISyntaxException e) {
+            System.out.println("Error: Invalid URL " + e.toString());
+        }
     }
 }
 

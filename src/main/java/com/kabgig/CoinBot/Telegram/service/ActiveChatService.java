@@ -5,17 +5,22 @@ import com.kabgig.CoinBot.Telegram.repository.ActiveChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ActiveChatService {
-
     @Autowired
-    private static ActiveChatRepository activeChatRepository;
+    private ActiveChatRepository activeChatRepository;
 
-    public static void checkUser(Long userid) {
+    public void checkUser(Long userid) {
         if (activeChatRepository.findByChatId(userid) == null) {
             ActiveChat activeChat = new ActiveChat();
             activeChat.setChatId(userid);
             activeChatRepository.save(activeChat);
         }
+    }
+
+    public List<Long> getUniqueUsersChatIds() {
+        return activeChatRepository.findDistinctChatId();
     }
 }
