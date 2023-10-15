@@ -9,8 +9,11 @@ public class ActiveChat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //Уникальный идентификатор в системе нашего бота
+    private Long id;
 
     @Column(name = "chat_id")
-    private Long chatId; //Уникальный идентификатор в системе Telegram
+    private Long chatId;
+
+    @Column(name = "notifications")
+    private boolean notifications;
 }

@@ -25,17 +25,23 @@ public class BotService extends TelegramLongPollingBot {
     private UserCoinsService userCoinsService;
     @Autowired
     private ActiveChatService activeChatService;
+//    @Autowired
+//    private NotificationService notificationService;
 
     //COMMANDS
     public static final String START = "/start";
     public static final String ADDCOINS = "/addcoins";
     public static final String MYCOINS = "/mycoins";
     public static final String DELETE = "/delete";
+    public static final String NOTsON = "/non";
+    public static final String NOTsOFF = "/noff";
     public static final String MENU =
             "Commands menu:\n" +
             "/mycoins - check my coins\n" +
             "/addcoins - add coins\n" +
-            "/delete - delete coin";
+            "/delete - delete coin\n" +
+            "/non - turnOn notifications\n" +
+            "/noff - turnOff notifications";
 
     @Override
     public String getBotUsername() {
@@ -75,6 +81,16 @@ public class BotService extends TelegramLongPollingBot {
 
         if(cmd.startsWith("/delete"))
             return processDeleteCommand(cmd,msg);
+
+        if(cmd.equals(NOTsON)){
+            activeChatService.setNotificationsOn(msg.getChatId());
+            return "Notifications are ON";
+        }
+
+        if(cmd.equals(NOTsOFF)){
+            activeChatService.setNotificationsOff(msg.getChatId());
+            return "Notifications are OFF";
+        }
 
         if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ---- \n" + MENU;

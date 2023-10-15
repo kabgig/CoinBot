@@ -1,0 +1,1 @@
+ALTER TABLE active_chat ADD COLUMN notifications BOOLEAN;
