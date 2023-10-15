@@ -40,27 +40,10 @@ public class CoinMarketCapService {
     private static String apiKeyReal = "8f2300f8-ebae-4bcb-9e8e-4405c0fbeb2e";
     private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     private List<CurrentData> currentDataArray = null;
-    public String getCoinNameAndPrice() {
-        String result = "";
-        List<CurrentData> coinData = getCoinsData();
-        lgr().info("GOT coinData LIST");
-        saveToLogFile(coinData);
-
-        for (int i = 0; i < coinData.size(); i++) {
-            CurrentData currentData = coinData.get(i);
-            String name = currentData.getName();
-            String symbol = currentData.getSymbol();
-            double price = currentData.getUsd_price();
-            System.out.println();
-            result = "Name: " + name + " Symbol: " + symbol + " Price: " + price + "$";
-            System.out.println(result);
-        }
-        return result;
-    }
 
     public List<CurrentData> getCoinsData() {
         String result = "";
-        if(currentDataArray != null && !currentDataArray.isEmpty())
+        if (currentDataArray != null && !currentDataArray.isEmpty())
             return currentDataArray;
         //check if the date is NOT current,
         if (!isCurrentdate()) {
@@ -102,8 +85,8 @@ public class CoinMarketCapService {
         }
         var last = byId.get().getLastUpdated();
         var now = LocalDateTime.now();
-        if(now.getMonth() == last.getMonth() &&
-           now.getDayOfMonth() == last.getDayOfMonth()){
+        if (now.getMonth() == last.getMonth() &&
+                now.getDayOfMonth() == last.getDayOfMonth()) {
             isCurrent = true;
             lgr().info("THE DATE IS CURRENT");
         } else {
@@ -207,7 +190,7 @@ public class CoinMarketCapService {
     public List<String> getCoinSymbolList() {
         List<String> symbols = new ArrayList<>();
         List<CurrentData> all = currentDataRepository.findAll();
-        for(var i : all){
+        for (var i : all) {
             symbols.add(i.getSymbol());
         }
         return symbols;
@@ -217,17 +200,28 @@ public class CoinMarketCapService {
         return currentDataRepository.findBySymbol(cmd);
     }
 
+
+
     public List<CurrentData> getCustomCoinList(List<UserCoins> userCoins) {
         List<Long> coinIds = new ArrayList<>();
-        for(var item : userCoins) coinIds.add(item.getId());
+        for (var item : userCoins)
+            coinIds.add(item.getCoinId());
 
         List<CurrentData> coinList = new ArrayList<>();
         List<CurrentData> all = currentDataRepository.findAll();
-        for (var currentData : all){
+        for (var currentData : all) {
             if (coinIds.contains(currentData.getId()))
                 coinList.add(currentData);
         }
         return coinList;
+    }
+
+    public CurrentData getOneCoinDataById(Long coinId) {
+        return currentDataRepository.findById(coinId).get();
+    }
+
+    public CurrentData getOneCoinBySymbol(String coinSymbol) {
+        return currentDataRepository.findBySymbol(coinSymbol);
     }
 }
 

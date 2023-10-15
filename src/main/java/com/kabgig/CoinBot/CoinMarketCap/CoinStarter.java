@@ -10,6 +10,6 @@ public class CoinStarter {
     private CoinMarketCapService coinMarketCapService;
     @Bean
     public void printCoins(){
-        coinMarketCapService.getCoinNameAndPrice();
+       // coinMarketCapService.getCoinNameAndPrice();
     }
 }

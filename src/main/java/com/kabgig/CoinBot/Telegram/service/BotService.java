@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.kabgig.CoinBot.Telegram.service.ActiveChatService.checkUser;
 import static com.kabgig.CoinBot.Utils.Logger.lgr;
 
 @Service
@@ -25,9 +25,15 @@ public class BotService extends TelegramLongPollingBot {
     private UserCoinsService userCoinsService;
 
     //COMMANDS
-    public static final String COINS = "/coins";
+    public static final String START = "/start";
     public static final String ADDCOINS = "/addcoins";
     public static final String MYCOINS = "/mycoins";
+    public static final String DELETE = "/delete";
+    public static final String MENU =
+            "Commands menu:\n" +
+            "/mycoins - check all your coins\n" +
+            "/addcoins - add coins\n" +
+            "/delete - delete coin";
 
     @Override
     public String getBotUsername() {
@@ -43,7 +49,7 @@ public class BotService extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         var msg = update.getMessage();
         var userid = msg.getChatId();
-       // checkUser(userid);
+        // checkUser(userid);
 
         var response = proceedCommand(msg);
         sendText(userid, response);
@@ -53,31 +59,54 @@ public class BotService extends TelegramLongPollingBot {
         String cmd = msg.getText();
         lgr().info("Proceeding command: " + cmd);
 
-        if (cmd.equals(COINS))
-            return coinMarketCapService.getCoinNameAndPrice();
+        if (cmd.equals(START))
+            return MENU;
 
         if (cmd.equals(ADDCOINS))
             return "In order to subscribe send ONE coin symbol i.e. BTC or ETH";
 
-        if(cmd.equals(MYCOINS))
-            return getMyCoins(msg);
+        if (cmd.equals(MYCOINS))
+            return getMyCoins(msg) + "\n ---- \n" + MENU;
 
-        if (!cmd.equals(COINS) && !cmd.equals(ADDCOINS))
-            return processCoinSymbolAndSubscribe(cmd, msg);
+        if(cmd.equals(DELETE))
+            return "Which coin you want to delete?\n" + getDeleteMenu(msg);
+
+        if(cmd.startsWith("/delete"))
+            return processDeleteCommand(cmd,msg);
+
+        if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
+            return processCoinSymbolAndSubscribe(cmd, msg) + "\n ---- \n" + MENU;
 
 
-        return "Wrong command! Start again";
+        return "Wrong command! Start again" + "\n ---- \n" + MENU;
+    }
+
+    private String processDeleteCommand(String cmd, Message msg) {
+        String coinSymbol = cmd.substring("/delete".length());
+        CurrentData coin = coinMarketCapService.getOneCoinBySymbol(coinSymbol);
+        userCoinsService.deleteByCoinAndUserId(coin.getId(), msg.getChatId());
+        return coin.getName() + " was deleted from your coins." + "\n ---- \n" + MENU;
+    }
+
+    private String getDeleteMenu(Message msg) {
+        String resultMenu = "";
+        List<UserCoins> userCoins = userCoinsService.getUserCoins(msg.getChatId());
+        for(var userCoin : userCoins){
+            CurrentData coin = coinMarketCapService.getOneCoinDataById(userCoin.getCoinId());
+            resultMenu = resultMenu + "/delete" + coin.getSymbol() + " - delete " + coin.getName() + "\n";
+        }
+        return resultMenu;
     }
 
     private String getMyCoins(Message msg) {
         String result = "";
         List<UserCoins> userCoins = userCoinsService.getUserCoins(msg.getChatId());
         List<CurrentData> customCoinList = coinMarketCapService.getCustomCoinList(userCoins);
-        for(var item : customCoinList){
+        for (var item : customCoinList) {
             result = result + "\n\n" +
                     item.getName() + " " +
                     item.getSymbol() + "\n" +
-                    item.getUsd_price() + "$";
+                    item.getUsd_price() + " $";
         }
         return result;
     }
@@ -86,11 +115,19 @@ public class BotService extends TelegramLongPollingBot {
         List<String> coinSymbols = coinMarketCapService.getCoinSymbolList();
         if (coinSymbols.contains(cmd)) {
             CurrentData coinData = coinMarketCapService.getOneCoinData(cmd);
-            userCoinsService.addCoinSubscribtion(
-                    msg.getChatId(),
-                    coinData.getId());
+            Optional<UserCoins> oneUserCoin = userCoinsService.getOneUserCoin(coinData.getId());
+            if (oneUserCoin.isEmpty()) {
+                userCoinsService.addCoinSubscribtion(
+                        msg.getChatId(),
+                        coinData.getId());
+                lgr().info(cmd + " COIN ADDED TO SUBSCRIPTION");
+            } else {
+                lgr().info(cmd + " COIN ALREADY EXISTS IN SUBSCRIPTION");
+                return cmd + " coin already exists in your subscription.\nTo add another coin\n👇press command\n/addcoins";
+            }
         } else {
-            return "Coin Symbol is wrong, try again";
+            lgr().info(cmd + " COIN SYMBOL IS WRONG, TRY AGAIN");
+            return cmd + " coin symbol is wrong, try again, \n👇press command\n/addcoins";
         }
 
         return cmd + " subscribed!!!!";
