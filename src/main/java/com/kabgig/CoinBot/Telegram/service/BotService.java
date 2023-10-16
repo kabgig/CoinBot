@@ -32,6 +32,7 @@ public class BotService extends TelegramLongPollingBot {
     public static final String START = "/start";
     public static final String ADDCOINS = "/addcoins";
     public static final String MYCOINS = "/mycoins";
+    public static final String UPDATE = "/update";
     public static final String DELETE = "/delete";
     public static final String NOTsON = "/non";
     public static final String NOTsOFF = "/noff";
@@ -41,6 +42,7 @@ public class BotService extends TelegramLongPollingBot {
             "Commands menu:\n" +
                     "/mycoins - check my coins\n" +
                     "/addcoins - add coins\n" +
+                    "/update - update coin amount\n" +
                     "/delete - delete coin\n" +
                     "/non - turnOn notifications\n" +
                     "/noff - turnOff notifications";
@@ -62,7 +64,7 @@ public class BotService extends TelegramLongPollingBot {
         activeChatService.checkUser(userid);
 
         var response = proceedCommand(msg);
-        if(!response.equals("")) sendText(userid, response);
+        if (!response.equals("")) sendText(userid, response);
     }
 
     private String proceedCommand(Message msg) {
@@ -73,10 +75,21 @@ public class BotService extends TelegramLongPollingBot {
             return MENU;
 
         if (cmd.equals(ADDCOINS))
-            return "In order to subscribe send ONE coin symbol i.e. BTC or ETH";
+            return "In order to subscribe, send coin symbol " +
+                    "and amount you have.\n If you don't have crypto write only symbol.\n\n" +
+                    "For example:\n" +
+                    "BTC 0.03\n" +
+                    "ETH 12.41\n" +
+                    "LTC\n" +
+                    "etc";
 
         if (cmd.equals(MYCOINS))
             return getMyCoins(msg.getChatId()) + "\n ---- \n" + MENU;
+
+        if (cmd.equals(UPDATE))
+            return "To update existing coin, type coin symbol and new amount.\n" +
+                    "For example:\n" +
+                    "BTC 1.37";
 
         if (cmd.equals(DELETE))
             return "Which coin you want to delete?\n" + getDeleteMenu(msg);
@@ -99,13 +112,13 @@ public class BotService extends TelegramLongPollingBot {
             return "Admin message is processed";
         }
 
-        if(cmd.equals(ADMIN_REFRESH)) {
+        if (cmd.equals(ADMIN_REFRESH)) {
             coinMarketCapService.updateDatabase();
             return "Coin's data is updated";
         }
 
         if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
-            return processCoinSymbolAndSubscribe(cmd, msg) + "\n ---- \n" + MENU;
+            return processCoinSymbolAndSubscribe(cmd, msg) + "\n ------- \n" + MENU;
 
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
     }
@@ -138,21 +151,29 @@ public class BotService extends TelegramLongPollingBot {
         String result = "";
         List<UserCoins> userCoins = userCoinsService.getUserCoins(chatId);
         List<CurrentData> customCoinList = coinMarketCapService.getCustomCoinList(userCoins);
-
-        for (var item : customCoinList) {
-            double h1 = roundDouble(item.getUsd_percentChange1h());
+        double totalValue = 0.0;
+        for (CurrentData item : customCoinList) {
+            String h24Arrow = " 🟢 ";
+            String d7Arrow = " 🟢 ";
             double h24 = roundDouble(item.getUsd_percentChange24h());
             double d7 = roundDouble(item.getUsd_percentChange7d());
+            if (h24 < 0) h24Arrow = " 🔴 ";
+            if (d7 < 0) d7Arrow = " 🔴 ";
+            double amountOfCrypto = userCoinsService.getCryptoAmount(chatId,item.getId());
+            double coinPrice = roundDouble(item.getUsd_price());
+            double value = roundDouble(coinPrice * amountOfCrypto);
             result = result + "\n\n" +
                     item.getName() + " " +
                     item.getSymbol() + "\n" +
-                    roundDouble(item.getUsd_price()) + " $\n" +
-                    //"%1h " + h1 + "\n" +
-                    "%24h " + h24 + "\n" +
-                    "%7d " + d7 + "\n" +
+                    "🏷️ Coin price: " + coinPrice + " $\n" +
+                    "🪙 Your amount: " + amountOfCrypto +"\n" +
+                    "💰 Your value: " + value + " $\n" +
+                    "%24h "+ h24Arrow + h24  + "\n" +
+                    "%7d "+ d7Arrow + d7  + "\n" +
                     "-------";
+            totalValue += value;
         }
-        return result;
+        return result + "\n\nTotal value: " + totalValue + " $";
     }
 
     private static double roundDouble(double item) {
@@ -161,21 +182,37 @@ public class BotService extends TelegramLongPollingBot {
 
     private String processCoinSymbolAndSubscribe(String cmd, Message msg) {
         List<String> coinSymbols = coinMarketCapService.getCoinSymbolList();
+        if (cmd.contains(",")) return "Don't use comma ','\n Use dot '.' instead\nTry again";
+        String[] cmdArray = cmd.trim().toUpperCase().split(" ");
+        cmd = cmdArray[0];
+        double amountOfCrypto = 0.0;
+        if(cmdArray.length > 1) amountOfCrypto = Double.parseDouble(cmdArray[1]);
+
         if (coinSymbols.contains(cmd)) {
             CurrentData coinData = coinMarketCapService.getOneCoinData(cmd);
-            Optional<UserCoins> oneUserCoin = userCoinsService.getOneUserCoin(coinData.getId());
+            Optional<UserCoins> oneUserCoin = userCoinsService.getOneUserCoinByChatIdAndCoinId(msg.getChatId(), coinData.getId());
             if (oneUserCoin.isEmpty()) {
                 userCoinsService.addCoinSubscribtion(
                         msg.getChatId(),
-                        coinData.getId());
+                        coinData.getId(),
+                        amountOfCrypto);
                 lgr().info(cmd + " COIN ADDED TO SUBSCRIPTION");
             } else {
-                lgr().info(cmd + " COIN ALREADY EXISTS IN SUBSCRIPTION");
-                return cmd + " coin already exists in your subscription.\nTo add another coin\n👇press command\n/addcoins";
+                UserCoins existingCoin = oneUserCoin.get();
+                existingCoin.setAmount(amountOfCrypto);
+                //если че то сначала надо удалить
+                userCoinsService.deleteByCoinAndUserId(existingCoin.getCoinId(),msg.getChatId());
+                userCoinsService.addCoinSubscribtion(
+                        existingCoin.getChatId(),
+                        existingCoin.getCoinId(),
+                        existingCoin.getAmount());
+                lgr().info(cmd + " COIN UPDATED WITH NEW AMOUNT: " + amountOfCrypto);
+                return cmd + " coin is updated with new amount: " + amountOfCrypto;
             }
         } else {
             lgr().info(cmd + " COIN SYMBOL IS WRONG, TRY AGAIN");
-            return cmd + " coin symbol is wrong, try again, \n👇press command\n/addcoins";
+            return cmd + " coin symbol is wrong,\n" +
+                    "check correct symbol spelling at coinmarketcap.com and try again, \n👇press command\n/addcoins";
         }
 
         return cmd + " subscribed!!!!";

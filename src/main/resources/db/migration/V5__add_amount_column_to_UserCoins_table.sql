@@ -1,0 +1,2 @@
+ALTER TABLE user_coins
+ADD COLUMN amount DOUBLE;

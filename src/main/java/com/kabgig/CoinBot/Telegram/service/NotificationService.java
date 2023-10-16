@@ -25,12 +25,14 @@ public class NotificationService {
     @Scheduled(cron = "0 0 9 * * *")
     @Bean
     public void dbRefresh() {
-        if (coinMarketCapService.isCurrentdate()) {
+        if (!coinMarketCapService.isCurrentdate()) {
             coinMarketCapService.updateDatabase();
+            botService.sendText(449744439L, "Executed daily database refresh");
+            lgr().info("EXECUTED DAILY DATABASE REFRESH");
         }
     }
 
-    @Scheduled(cron = "*/15 * * * * *")
+    @Scheduled(cron = "0 0 11 * * *")
     @Bean
     public void notifySubscribers() throws InterruptedException {
         List<ActiveChat> uniqueChats = activeChatService.getUniqueUsersChats();

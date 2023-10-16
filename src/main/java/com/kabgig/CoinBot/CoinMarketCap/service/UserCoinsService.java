@@ -14,10 +14,11 @@ public class UserCoinsService {
     @Autowired
     private UserCoinsRepository userCoinsRepository;
 
-    public UserCoins addCoinSubscribtion(Long chatId, Long coinId){
+    public UserCoins addCoinSubscribtion(Long chatId, Long coinId, double amountOfCrypto){
         UserCoins userCoin = new UserCoins();
         userCoin.setCoinId(coinId);
         userCoin.setChatId(chatId);
+        userCoin.setAmount(amountOfCrypto);
         return userCoinsRepository.save(userCoin);
     }
 
@@ -32,5 +33,15 @@ public class UserCoinsService {
     @Transactional
     public void deleteByCoinAndUserId(Long coinId, Long chatId) {
         userCoinsRepository.deleteByCoinIdAndChatId(coinId, chatId);
+    }
+
+    public Optional<UserCoins> getOneUserCoinByChatIdAndCoinId(Long chatId, Long coinId) {
+        return userCoinsRepository.findByChatIdAndCoinId(chatId, coinId);
+    }
+
+    public double getCryptoAmount(Long chatId, Long coinId) {
+        return getOneUserCoinByChatIdAndCoinId(chatId, coinId)
+                .get()
+                .getAmount();
     }
 }

@@ -13,4 +13,6 @@ public class UserCoins {
     private Long chatId;
     @Column(name = "coin_id")
     private Long coinId;
+    @Column(name = "amount")
+    private Double amount;
 }
