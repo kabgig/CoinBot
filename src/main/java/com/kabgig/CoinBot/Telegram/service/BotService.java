@@ -4,6 +4,7 @@ import com.kabgig.CoinBot.CoinMarketCap.entity.CurrentData;
 import com.kabgig.CoinBot.CoinMarketCap.entity.UserCoins;
 import com.kabgig.CoinBot.CoinMarketCap.service.CoinMarketCapService;
 import com.kabgig.CoinBot.CoinMarketCap.service.UserCoinsService;
+import com.kabgig.CoinBot.Telegram.entity.ActiveChat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +27,6 @@ public class BotService extends TelegramLongPollingBot {
     private UserCoinsService userCoinsService;
     @Autowired
     private ActiveChatService activeChatService;
-//    @Autowired
-//    private NotificationService notificationService;
 
     //COMMANDS
     public static final String START = "/start";
@@ -35,13 +35,15 @@ public class BotService extends TelegramLongPollingBot {
     public static final String DELETE = "/delete";
     public static final String NOTsON = "/non";
     public static final String NOTsOFF = "/noff";
+    public static final String ADMIN_MESSAGE = "adminMessage: ";
+    public static final String ADMIN_REFRESH = "refreshCoins";
     public static final String MENU =
             "Commands menu:\n" +
-            "/mycoins - check my coins\n" +
-            "/addcoins - add coins\n" +
-            "/delete - delete coin\n" +
-            "/non - turnOn notifications\n" +
-            "/noff - turnOff notifications";
+                    "/mycoins - check my coins\n" +
+                    "/addcoins - add coins\n" +
+                    "/delete - delete coin\n" +
+                    "/non - turnOn notifications\n" +
+                    "/noff - turnOff notifications";
 
     @Override
     public String getBotUsername() {
@@ -60,7 +62,7 @@ public class BotService extends TelegramLongPollingBot {
         activeChatService.checkUser(userid);
 
         var response = proceedCommand(msg);
-        sendText(userid, response);
+        if(!response.equals("")) sendText(userid, response);
     }
 
     private String proceedCommand(Message msg) {
@@ -76,27 +78,43 @@ public class BotService extends TelegramLongPollingBot {
         if (cmd.equals(MYCOINS))
             return getMyCoins(msg.getChatId()) + "\n ---- \n" + MENU;
 
-        if(cmd.equals(DELETE))
+        if (cmd.equals(DELETE))
             return "Which coin you want to delete?\n" + getDeleteMenu(msg);
 
-        if(cmd.startsWith("/delete"))
-            return processDeleteCommand(cmd,msg);
+        if (cmd.startsWith("/delete"))
+            return processDeleteCommand(cmd, msg);
 
-        if(cmd.equals(NOTsON)){
+        if (cmd.equals(NOTsON)) {
             activeChatService.setNotificationsOn(msg.getChatId());
             return "Notifications are ON";
         }
 
-        if(cmd.equals(NOTsOFF)){
+        if (cmd.equals(NOTsOFF)) {
             activeChatService.setNotificationsOff(msg.getChatId());
             return "Notifications are OFF";
+        }
+
+        if (cmd.startsWith(ADMIN_MESSAGE)) {
+            processAdminMessage(msg.getText());
+            return "Admin message is processed";
+        }
+
+        if(cmd.equals(ADMIN_REFRESH)) {
+            coinMarketCapService.updateDatabase();
+            return "Coin's data is updated";
         }
 
         if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ---- \n" + MENU;
 
-
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
+    }
+
+    private void processAdminMessage(String cmd) {
+        cmd = cmd.substring("adminMessage: ".length());
+        List<ActiveChat> uniqueChats = activeChatService.getUniqueUsersChats();
+        for (var chat : uniqueChats) sendText(chat.getChatId(), cmd);
+        lgr().info("ADMIN MESSAGE IS SENT " + LocalDateTime.now() + " " + cmd);
     }
 
     private String processDeleteCommand(String cmd, Message msg) {
@@ -109,7 +127,7 @@ public class BotService extends TelegramLongPollingBot {
     private String getDeleteMenu(Message msg) {
         String resultMenu = "";
         List<UserCoins> userCoins = userCoinsService.getUserCoins(msg.getChatId());
-        for(var userCoin : userCoins){
+        for (var userCoin : userCoins) {
             CurrentData coin = coinMarketCapService.getOneCoinDataById(userCoin.getCoinId());
             resultMenu = resultMenu + "/delete" + coin.getSymbol() + " - delete " + coin.getName() + "\n";
         }
@@ -129,7 +147,7 @@ public class BotService extends TelegramLongPollingBot {
                     item.getName() + " " +
                     item.getSymbol() + "\n" +
                     roundDouble(item.getUsd_price()) + " $\n" +
-                    "%1h " + h1 + "\n" +
+                    //"%1h " + h1 + "\n" +
                     "%24h " + h24 + "\n" +
                     "%7d " + d7 + "\n" +
                     "-------";
