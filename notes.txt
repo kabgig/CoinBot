@@ -10,3 +10,11 @@ docker run -d -p 7777:3306
 -e MYSQL_USER=kabgig
 -e MYSQL_PASSWORD=getmycoins
 -e MYSQL_DATABASE=mydatabase mysql:8.0
+
+DB credentials for vps mysql
+dbName = mydatabase
+username = kabgigremote
+password = 27Jan1989!
+
+TODO:
+можно добавить настройку время update сообщения
