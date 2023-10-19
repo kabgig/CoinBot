@@ -124,7 +124,7 @@ public class CoinMarketCapService {
 //            currentData.setBtc_lastUpdated(btcObject.get("last_updated").getAsString());
 
             result.add(currentData);
-            lgr().info("ADDED CURRENT DATA TO LIST: " + currentData);
+            lgr().info("ADDED DATA TO LIST: " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
         }
         return result;
     }
@@ -202,17 +202,18 @@ public class CoinMarketCapService {
     public void updateDatabase() {
         try {
             String result = makeAPICall(uriLatest, getParameters());
-            lgr().info("EXECUTED makeApiCall() AND GOT RESULT: " + result);
+            lgr().info("EXECUTED makeApiCall() AND GOT RESULT");
             JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
             JsonArray data = jsonObject.getAsJsonArray("data");
-            lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING: " + data);
+            lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING");
             try {
                 currentDataArray = mapToEntityArray(data);
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
                 for (CurrentData currentData : currentDataArray) {
-                    lgr().info("STARTING SAVING ENTITY: " + currentData);
+                    Thread.sleep(1);
+                    lgr().info("STARTING SAVING ENTITY: " + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
                     currentDataRepository.save(currentData);
-                    System.out.println(currentData);
+                    //System.out.println(currentData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

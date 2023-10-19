@@ -5,14 +5,18 @@ import com.kabgig.CoinBot.CoinMarketCap.entity.UserCoins;
 import com.kabgig.CoinBot.CoinMarketCap.service.CoinMarketCapService;
 import com.kabgig.CoinBot.CoinMarketCap.service.UserCoinsService;
 import com.kabgig.CoinBot.Telegram.entity.ActiveChat;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import java.util.Optional;
 import static com.kabgig.CoinBot.Utils.Logger.lgr;
 
 @Service
+@Data
 public class BotService extends TelegramLongPollingBot {
     @Autowired
     private CoinMarketCapService coinMarketCapService;
@@ -27,6 +32,9 @@ public class BotService extends TelegramLongPollingBot {
     private UserCoinsService userCoinsService;
     @Autowired
     private ActiveChatService activeChatService;
+
+    private Long adminId = 449744439L;
+
 
     //COMMANDS
     public static final String START = "/start";
@@ -38,6 +46,7 @@ public class BotService extends TelegramLongPollingBot {
     public static final String NOTsOFF = "/noff";
     public static final String ADMIN_MESSAGE = "adminMessage: ";
     public static final String ADMIN_REFRESH = "refreshCoins";
+    public static final String ADMIN_SET = "setAdmin";
     public static final String MENU =
             "Commands menu:\n" +
                     "/mycoins - check my coins\n" +
@@ -112,6 +121,14 @@ public class BotService extends TelegramLongPollingBot {
             return "Admin message is processed";
         }
 
+        if (cmd.equalsIgnoreCase("log:")){
+            return sendLogs();
+        }
+
+        if (cmd.equals(ADMIN_SET)){
+            return setAdmin(msg);
+        }
+
         if (cmd.equals(ADMIN_REFRESH)) {
             coinMarketCapService.updateDatabase();
             return "Coin's data is updated";
@@ -121,6 +138,11 @@ public class BotService extends TelegramLongPollingBot {
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ------- \n" + MENU;
 
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
+    }
+
+    private String setAdmin(Message msg) {
+        adminId = msg.getChatId();
+        return "Admin: " + adminId + " is set";
     }
 
     private void processAdminMessage(String cmd) {
@@ -229,5 +251,22 @@ public class BotService extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);      //Any error will be printed here
         }
+    }
+
+    private String sendLogs() {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth();
+        InputFile inputFile = new InputFile(new File("logs/log-" + date + ".txt"));
+
+        SendDocument sendDocumentRequest = new SendDocument();
+        sendDocumentRequest.setChatId(adminId.toString());
+        sendDocumentRequest.setDocument(inputFile);
+        sendDocumentRequest.setCaption("Logs");
+        try {
+            execute(sendDocumentRequest);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+        return "Logs for " + date;
     }
 }

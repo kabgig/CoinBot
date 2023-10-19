@@ -22,12 +22,12 @@ public class NotificationService {
     @Autowired
     private ActiveChatService activeChatService;
 
-    @Scheduled(cron = "0 0 9 * * *")
+    @Scheduled(cron = "0 0 5 * * *")
     @Bean
     public void dbRefresh() {
         if (!coinMarketCapService.isCurrentdate()) {
             coinMarketCapService.updateDatabase();
-            botService.sendText(449744439L, "Executed daily database refresh");
+            botService.sendText(botService.getAdminId(), "Executed daily database refresh");
             lgr().info("EXECUTED DAILY DATABASE REFRESH");
         }
     }
