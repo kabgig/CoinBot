@@ -32,6 +32,8 @@ public class BotService extends TelegramLongPollingBot {
     private UserCoinsService userCoinsService;
     @Autowired
     private ActiveChatService activeChatService;
+    @Autowired
+    private DatabaseDumpService databaseDumpService;
 
     private Long adminId = 449744439L;
 
@@ -46,6 +48,7 @@ public class BotService extends TelegramLongPollingBot {
     public static final String NOTsOFF = "/noff";
     public static final String ADMIN_MESSAGE = "adminMessage: ";
     public static final String ADMIN_REFRESH = "refreshCoins";
+    public static final String FAQ = "FAQ:";
     public static final String ADMIN_SET = "setAdmin";
     public static final String MENU =
             "Commands menu:\n" +
@@ -55,6 +58,14 @@ public class BotService extends TelegramLongPollingBot {
                     "/delete - delete coin\n" +
                     "/non - turnOn notifications\n" +
                     "/noff - turnOff notifications";
+    public static final String adminFAQ =
+            MENU + "\n" +
+                    "adminMessage: - (w/space) send admin message\n" +
+                    "refreshCoins - refresh database\n" +
+                    "setAdmin - set current user to admin\n" +
+                    "sqlBackup: - get SQL backup file\n" +
+                    "Log: - get log file\n" +
+                    "FAQ: - all admin commands";
 
     @Override
     public String getBotUsername() {
@@ -129,16 +140,27 @@ public class BotService extends TelegramLongPollingBot {
             return setAdmin(msg);
         }
 
+        if (cmd.equalsIgnoreCase("sqlBackup:")){
+            databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
+            return sendSql();
+
+        }
+
         if (cmd.equals(ADMIN_REFRESH)) {
             coinMarketCapService.updateDatabase();
             return "Coin's data is updated";
         }
+
+        if (cmd.equalsIgnoreCase(FAQ))
+            return adminFAQ;
 
         if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ------- \n" + MENU;
 
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
     }
+
+
 
     private String setAdmin(Message msg) {
         adminId = msg.getChatId();
@@ -253,20 +275,28 @@ public class BotService extends TelegramLongPollingBot {
         }
     }
 
-    private String sendLogs() {
+    public String sendLogs() {
         LocalDateTime now = LocalDateTime.now();
         String date = now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth();
-        InputFile inputFile = new InputFile(new File("logs/log-" + date + ".txt"));
+        sendDocument("logs/log-" + date + ".txt", "Logs");
+        return "";
+    }
 
+    public String sendSql() {
+        sendDocument("sqlBackups/userCoins.xlsx", "SQL backup");
+        return "";
+    }
+
+    private void sendDocument(String pathname, String SQL_backup) {
+        InputFile inputFile = new InputFile(new File(pathname));
         SendDocument sendDocumentRequest = new SendDocument();
         sendDocumentRequest.setChatId(adminId.toString());
         sendDocumentRequest.setDocument(inputFile);
-        sendDocumentRequest.setCaption("Logs");
+        sendDocumentRequest.setCaption(SQL_backup);
         try {
             execute(sendDocumentRequest);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
-        return "Logs for " + date;
     }
 }

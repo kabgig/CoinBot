@@ -40,6 +40,7 @@ public class CoinMarketCapService {
     private static String apiKeyReal = "8f2300f8-ebae-4bcb-9e8e-4405c0fbeb2e";
     private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     private List<CurrentData> currentDataArray = null;
+    private List<CurrentData> currentSavingArray = null;
 
     //public List<CurrentData> getCoinsData() {
 //        if (!isCurrentdate()) {
@@ -203,7 +204,7 @@ public class CoinMarketCapService {
 
     public void updateDatabase() {
         try {
-            int batchSize = 500; // Set your preferred batch size
+            int batchSize = 1000; // Set your preferred batch size
             List<CurrentData> batchToSave = new ArrayList<>(batchSize); // Create a list to accumulate entities
             String result = makeAPICall(uriLatest, getParameters());
             lgr().info("EXECUTED makeApiCall() AND GOT RESULT");
@@ -212,11 +213,12 @@ public class CoinMarketCapService {
             lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING");
             try {
                 currentDataArray = mapToEntityArray(data);
+                currentSavingArray = currentDataArray;
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
-                int countSize = currentDataArray.size();
+                int countSize = currentSavingArray.size();
                 int count = 0;
                 int N = 1;
-                for (CurrentData currentData : currentDataArray) {
+                for (CurrentData currentData : currentSavingArray) {
                     lgr().info("PREPARING ENTITY N="+ N + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
                     //currentDataRepository.save(currentData);
                     batchToSave.add(currentData); // Add the entity to the batch

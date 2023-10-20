@@ -44,4 +44,7 @@ public class UserCoinsService {
                 .get()
                 .getAmount();
     }
+    public List<UserCoins> getAllUserCoins(){
+        return userCoinsRepository.findAll();
+    }
 }
