@@ -9,5 +9,8 @@ docker run -d -p 7777:3306
 -e MYSQL_DATABASE=mydatabase mysql:8.0
 
 TODO:
+- [ ] is it possible to write information in bulk to db? (transactions or smth)
 - [ ] можно добавить настройку время update сообщения
 - [ ] Set logging to file and automatic sending to me
+- [ ] add command FAQ for admin with all commands
+- [ ] TRY to connect to localhost mysql on server VPS (maybe it's faster)

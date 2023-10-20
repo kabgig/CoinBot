@@ -75,6 +75,7 @@ public class CoinMarketCapService {
 
     private List<CurrentData> mapToEntityArray(JsonArray data) {
         List<CurrentData> result = new ArrayList<>();
+        int count = 1;
         for (JsonElement element : data) {
             CurrentData currentData = new CurrentData();
             currentData.setId(element.getAsJsonObject().get("id").getAsLong());
@@ -124,7 +125,8 @@ public class CoinMarketCapService {
 //            currentData.setBtc_lastUpdated(btcObject.get("last_updated").getAsString());
 
             result.add(currentData);
-            lgr().info("ADDED DATA TO LIST: " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
+            lgr().info("ADDED N="+ count +": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
+            count++;
         }
         return result;
     }
@@ -201,6 +203,8 @@ public class CoinMarketCapService {
 
     public void updateDatabase() {
         try {
+            int batchSize = 500; // Set your preferred batch size
+            List<CurrentData> batchToSave = new ArrayList<>(batchSize); // Create a list to accumulate entities
             String result = makeAPICall(uriLatest, getParameters());
             lgr().info("EXECUTED makeApiCall() AND GOT RESULT");
             JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
@@ -209,11 +213,21 @@ public class CoinMarketCapService {
             try {
                 currentDataArray = mapToEntityArray(data);
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
+                int countSize = currentDataArray.size();
+                int count = 0;
+                int N = 1;
                 for (CurrentData currentData : currentDataArray) {
-                    Thread.sleep(1);
-                    lgr().info("STARTING SAVING ENTITY: " + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
-                    currentDataRepository.save(currentData);
-                    //System.out.println(currentData);
+                    lgr().info("PREPARING ENTITY N="+ N + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
+                    //currentDataRepository.save(currentData);
+                    batchToSave.add(currentData); // Add the entity to the batch
+                    N++;
+                    // Check if the batch size is reached and then save the batch
+                    if (batchToSave.size() == batchSize || (countSize - count) == batchSize) {
+                        currentDataRepository.saveAll(batchToSave);
+                        batchToSave.clear(); // Clear the batch for the next iteration
+                        count += batchSize;
+                        lgr().info("PARTLY SAVED---------------------");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
