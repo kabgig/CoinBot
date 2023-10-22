@@ -29,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.kabgig.CoinBot.CoinMarketCap.utils.utils.*;
 import static com.kabgig.CoinBot.Utils.Logger.lgr;
@@ -39,6 +41,8 @@ public class CoinMarketCapService {
 
     @Autowired
     private CurrentDataRepository currentDataRepository;
+
+    private String updateResultMessage;
 
     private static String apiKeyDummy = "b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c";
     private static String apiKeyReal = "8f2300f8-ebae-4bcb-9e8e-4405c0fbeb2e";
@@ -196,8 +200,58 @@ public class CoinMarketCapService {
         return currentDataRepository.findBySymbol(coinSymbol);
     }
 
+//        @Async
+//    public String updateDatabase() {
+//        updateInProgress = true;
+//        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
+//        LocalDateTime start = LocalDateTime.now();
+//        int N = 1;
+//        int count = 0;
+//        try {
+//            int batchSize = 1000;
+//            List<CurrentData> batchToSave = new ArrayList<>(batchSize);
+//            String result = makeAPICall(uriLatest, getParameters());
+//            lgr().info("EXECUTED makeApiCall() AND GOT RESULT");
+//            JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
+//            JsonArray data = jsonObject.getAsJsonArray("data");
+//            lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING");
+//            try {
+//                currentDataArray = mapToEntityArray(data);
+//                currentSavingArray = currentDataArray;
+//                lgr().info("STARTING SAVING DATA TO REPOSITORY");
+//                int countSize = currentSavingArray.size();
+//                for (CurrentData currentData : currentSavingArray) {
+//                    batchToSave.add(currentData);
+//                    N++;
+//                    if (batchToSave.size() == batchSize || (countSize - count) == batchToSave.size()) {
+//                        currentDataRepository.saveAll(batchToSave);
+//                        count += batchToSave.size();
+//                        lgr().info("SAVED " + batchToSave.size() + " entities, total = " + count);
+//                        batchToSave.clear();
+//                    }
+//                }
+//            } catch (Exception e) {
+//                System.out.println(e);
+//                return e.toString();
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Error: can't access content - " + e);
+//            return e.toString();
+//        } catch (URISyntaxException e) {
+//            System.out.println("Error: Invalid URL " + e);
+//            return e.toString();
+//        }
+//        Duration duration = Duration.between(start, LocalDateTime.now());
+//        updateInProgress = false;
+//        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
+//        return "Executed daily database refresh, processed " +
+//                count + " entities during " +
+//                duration.toMinutes() + " minutes " +
+//                duration.toSeconds() + " seconds";
+//    }
+
     @Async
-    public String updateDatabase() {
+    public void updateDatabase() {
         updateInProgress = true;
         lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
         LocalDateTime start = LocalDateTime.now();
@@ -211,7 +265,6 @@ public class CoinMarketCapService {
             JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
             JsonArray data = jsonObject.getAsJsonArray("data");
             lgr().info("PROCESSED DATA ARRAY AND READY FOR MARSHALLING");
-            try {
                 currentDataArray = mapToEntityArray(data);
                 currentSavingArray = currentDataArray;
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
@@ -226,24 +279,20 @@ public class CoinMarketCapService {
                         batchToSave.clear();
                     }
                 }
-            } catch (Exception e) {
-                System.out.println(e);
-                return e.toString();
-            }
         } catch (IOException e) {
-            System.out.println("Error: can't access content - " + e);
-            return e.toString();
+            lgr().info("Error: can't access content - " + e);
         } catch (URISyntaxException e) {
-            System.out.println("Error: Invalid URL " + e);
-            return e.toString();
+            lgr().info("Error: Invalid URL " + e);
         }
         Duration duration = Duration.between(start, LocalDateTime.now());
         updateInProgress = false;
         lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
-        return "Executed daily database refresh, processed " +
+        updateResultMessage =
+                "Executed daily database refresh, processed " +
                 count + " entities during " +
                 duration.toMinutes() + " minutes " +
                 duration.toSeconds() + " seconds";
+        lgr().info(updateResultMessage);
     }
 }
 

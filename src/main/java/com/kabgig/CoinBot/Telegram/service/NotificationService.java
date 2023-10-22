@@ -30,8 +30,8 @@ public class NotificationService {
     @Scheduled(cron = "0 50 23 * * *")
     public void dbRefresh() {
         if (!coinMarketCapService.isCurrentdate()) {
-            var res = coinMarketCapService.updateDatabase();
-            botService.sendText(botService.getAdminId(), res);
+            coinMarketCapService.updateDatabase();
+            botService.sendText(botService.getAdminId(), "Database is updated");
             lgr().info("EXECUTED DAILY DATABASE REFRESH");
         }
     }

@@ -47,7 +47,7 @@ public class BotService extends TelegramLongPollingBot {
     public static final String NOTsON = "/non";
     public static final String NOTsOFF = "/noff";
     public static final String ADMIN_MESSAGE = "adminMessage: ";
-    public static final String ADMIN_REFRESH = "refreshCoins";
+    public static final String REFRESH_COINS = "refreshCoins";
     public static final String FAQ = "FAQ:";
     public static final String ADMIN_SET = "setAdmin";
     public static final String MENU =
@@ -94,7 +94,7 @@ public class BotService extends TelegramLongPollingBot {
 
     private String proceedCommand(Message msg) {
         String cmd = msg.getText();
-        lgr().info("Proceeding command: " + cmd);
+        lgr().info("PROCEEDING COMMAND: " + cmd + " THREAD: " + Thread.currentThread().getName());
 
         if (cmd.equals(START)) return MENU;
 
@@ -160,9 +160,9 @@ public class BotService extends TelegramLongPollingBot {
             return sendSql();
         }
 
-        if (cmd.equals(ADMIN_REFRESH)) {
-            var res = coinMarketCapService.updateDatabase();
-            return res;
+        if (cmd.equals(REFRESH_COINS)) {
+            coinMarketCapService.updateDatabase();
+            return "Database is updated";
         }
 
         if (cmd.equalsIgnoreCase(FAQ)) return adminFAQ;
@@ -172,6 +172,7 @@ public class BotService extends TelegramLongPollingBot {
         }
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
     }
+
 
     private String sendOldLogs(int daysBack) {
         LocalDateTime oldDay = LocalDateTime.now().minusDays(daysBack);

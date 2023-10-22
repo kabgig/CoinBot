@@ -10088,3 +10088,40 @@
 18:55:10.533 INFO  [main] - Bot STARTED
 18:55:11.225 INFO  [main] - Started CoinBotApplication in 4.526 seconds (process running for 4.754)
 18:55:29.643 INFO  [CoinBot Telegram Executor] - Proceeding command: refreshCoins
+19:38:38.881 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 19974 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot)
+19:38:38.882 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+19:38:38.883 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+19:38:41.143 INFO  [main] - THE DATE IS CURRENT
+19:38:43.190 INFO  [main] - Bot STARTED
+19:38:43.870 INFO  [main] - Started CoinBotApplication in 5.301 seconds (process running for 5.538)
+19:39:09.046 INFO  [CoinBot Telegram Executor] - Proceeding command: refreshCoins
+19:39:09.048 INFO  [CoinBot Telegram Executor] - THREAD: CoinBot Telegram Executor
+19:39:09.048 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: true THREAD: SimpleAsyncTaskExecutor-1
+19:39:12.240 INFO  [SimpleAsyncTaskExecutor-1] - EXECUTED makeApiCall() AND GOT RESULT
+19:39:12.327 INFO  [SimpleAsyncTaskExecutor-1] - PROCESSED DATA ARRAY AND READY FOR MARSHALLING
+19:39:12.327 INFO  [SimpleAsyncTaskExecutor-1] - STARTED ADDING ENTITIES TO THE LIST
+19:39:12.455 INFO  [SimpleAsyncTaskExecutor-1] - ADDED 5001 entities to list
+19:39:12.455 INFO  [SimpleAsyncTaskExecutor-1] - STARTING SAVING DATA TO REPOSITORY
+19:39:13.941 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 1000
+19:39:15.009 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 2000
+19:39:15.986 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 3000
+19:39:16.969 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 4000
+19:39:17.908 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 5000
+19:39:17.909 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: false THREAD: SimpleAsyncTaskExecutor-1
+19:39:17.910 INFO  [SimpleAsyncTaskExecutor-1] - Executed daily database refresh, processed 5000 entities during 0 minutes 8 seconds
+19:49:24.953 INFO  [CoinBot Telegram Executor] - Proceeding command: /mycoins
+19:49:25.086 INFO  [CoinBot Telegram Executor] - THREAD: CoinBot Telegram Executor
+19:49:39.802 INFO  [CoinBot Telegram Executor] - Proceeding command: Log:
+19:49:41.737 INFO  [CoinBot Telegram Executor] - THREAD: CoinBot Telegram Executor
+21:44:35.779 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 23067 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+21:44:35.779 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+21:44:35.780 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+21:44:38.177 INFO  [main] - THE DATE IS CURRENT
+21:44:40.132 INFO  [main] - Bot STARTED
+21:44:40.792 INFO  [main] - Started CoinBotApplication in 5.291 seconds (process running for 5.595)
+21:50:05.575 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 23186 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+21:50:05.576 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+21:50:05.577 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+21:50:07.592 INFO  [main] - THE DATE IS CURRENT
+21:50:09.068 INFO  [main] - Bot STARTED
+21:50:09.748 INFO  [main] - Started CoinBotApplication in 4.457 seconds (process running for 4.684)
