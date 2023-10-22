@@ -161,8 +161,7 @@ public class BotService extends TelegramLongPollingBot {
 
         if (cmd.equals(ADMIN_REFRESH)) {
             var res = coinMarketCapService.updateDatabase();
-            sendText(adminId, res);
-            return "Coin's data is updated";
+            return res;
         }
 
         if (cmd.equalsIgnoreCase(FAQ)) return adminFAQ;

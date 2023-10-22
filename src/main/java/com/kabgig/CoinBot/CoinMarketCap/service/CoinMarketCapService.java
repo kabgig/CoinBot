@@ -44,7 +44,7 @@ public class CoinMarketCapService {
     private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     private List<CurrentData> currentDataArray = null;
     private List<CurrentData> currentSavingArray = null;
-    private boolean updateInProgress = false;
+    private volatile boolean updateInProgress;
 
     public boolean isCurrentdate() {
         boolean isCurrent;
@@ -67,6 +67,7 @@ public class CoinMarketCapService {
     }
 
     private List<CurrentData> mapToEntityArray(JsonArray data) {
+        lgr().info("STARTED ADDING ENTITIES TO THE LIST");
         List<CurrentData> result = new ArrayList<>();
         int count = 1;
         for (JsonElement element : data) {
@@ -118,9 +119,9 @@ public class CoinMarketCapService {
 //            currentData.setBtc_lastUpdated(btcObject.get("last_updated").getAsString());
 
             result.add(currentData);
-            lgr().info("ADDED N=" + count + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
             count++;
         }
+        lgr().info("ADDED " + count + " entities to list");
         return result;
     }
 
@@ -196,12 +197,13 @@ public class CoinMarketCapService {
 
     public String updateDatabase() {
         updateInProgress = true;
+        System.out.println("updateInProgress: " + updateInProgress);
         LocalDateTime start = LocalDateTime.now();
         int N = 1;
         int count = 0;
         try {
-            int batchSize = 1000; // Set your preferred batch size
-            List<CurrentData> batchToSave = new ArrayList<>(batchSize); // Create a list to accumulate entities
+            int batchSize = 1000;
+            List<CurrentData> batchToSave = new ArrayList<>(batchSize);
             String result = makeAPICall(uriLatest, getParameters());
             lgr().info("EXECUTED makeApiCall() AND GOT RESULT");
             JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
@@ -213,31 +215,29 @@ public class CoinMarketCapService {
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
                 int countSize = currentSavingArray.size();
                 for (CurrentData currentData : currentSavingArray) {
-                    lgr().info("PREPARING ENTITY N=" + N + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
-                    //currentDataRepository.save(currentData);
-                    batchToSave.add(currentData); // Add the entity to the batch
+                    batchToSave.add(currentData);
                     N++;
-                    // Check if the batch size is reached and then save the batch
                     if (batchToSave.size() == batchSize || (countSize - count) == batchToSave.size()) {
                         currentDataRepository.saveAll(batchToSave);
                         count += batchToSave.size();
                         lgr().info("SAVED " + batchToSave.size() + " entities, total = " + count);
-                        batchToSave.clear(); // Clear the batch for the next iteration
+                        batchToSave.clear();
                     }
                 }
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.out.println(e);
                 return e.toString();
             }
         } catch (IOException e) {
-            System.out.println("Error: can't access content - " + e.toString());
+            System.out.println("Error: can't access content - " + e);
             return e.toString();
         } catch (URISyntaxException e) {
-            System.out.println("Error: Invalid URL " + e.toString());
+            System.out.println("Error: Invalid URL " + e);
             return e.toString();
         }
         Duration duration = Duration.between(start, LocalDateTime.now());
         updateInProgress = false;
+        System.out.println("updateInProgress: " + updateInProgress);
         return "Executed daily database refresh, processed " +
                 count + " entities during " +
                 duration.toMinutes() + " minutes " +
