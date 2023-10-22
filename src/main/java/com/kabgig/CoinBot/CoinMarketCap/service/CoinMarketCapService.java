@@ -19,6 +19,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -195,9 +196,10 @@ public class CoinMarketCapService {
         return currentDataRepository.findBySymbol(coinSymbol);
     }
 
+    @Async
     public String updateDatabase() {
         updateInProgress = true;
-        System.out.println("updateInProgress: " + updateInProgress);
+        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
         LocalDateTime start = LocalDateTime.now();
         int N = 1;
         int count = 0;
@@ -237,7 +239,7 @@ public class CoinMarketCapService {
         }
         Duration duration = Duration.between(start, LocalDateTime.now());
         updateInProgress = false;
-        System.out.println("updateInProgress: " + updateInProgress);
+        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
         return "Executed daily database refresh, processed " +
                 count + " entities during " +
                 duration.toMinutes() + " minutes " +

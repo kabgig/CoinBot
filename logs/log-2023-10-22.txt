@@ -10075,3 +10075,16 @@
 18:16:09.530 INFO  [main] - THE DATE IS CURRENT
 18:16:11.586 INFO  [main] - Bot STARTED
 18:16:12.232 INFO  [main] - Started CoinBotApplication in 4.96 seconds (process running for 5.184)
+18:53:00.940 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 19090 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot)
+18:53:00.941 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+18:53:00.942 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+18:53:03.159 INFO  [main] - THE DATE IS CURRENT
+18:53:05.206 INFO  [main] - Bot STARTED
+18:53:05.917 INFO  [main] - Started CoinBotApplication in 5.24 seconds (process running for 5.524)
+18:55:06.973 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 19133 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBot)
+18:55:06.974 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+18:55:06.975 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+18:55:09.113 INFO  [main] - THE DATE IS CURRENT
+18:55:10.533 INFO  [main] - Bot STARTED
+18:55:11.225 INFO  [main] - Started CoinBotApplication in 4.526 seconds (process running for 4.754)
+18:55:29.643 INFO  [CoinBot Telegram Executor] - Proceeding command: refreshCoins

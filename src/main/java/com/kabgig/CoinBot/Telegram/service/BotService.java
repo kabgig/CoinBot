@@ -87,6 +87,7 @@ public class BotService extends TelegramLongPollingBot {
             response = "Database update is in progress, Please try again later";
         } else {
             response = proceedCommand(msg);
+            lgr().info("THREAD: " + Thread.currentThread().getName());
         }
         if (!response.equals("")) sendText(userid, response);
     }
