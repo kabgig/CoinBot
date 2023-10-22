@@ -5,14 +5,22 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.List;
 
+import static com.kabgig.CoinBot.Utils.Logger.lgr;
+
 @Service
 public class DatabaseDumpService {
+
     public String dumpTable(List<UserCoins> userCoinsList) {
+        File backupFolder = new File("sqlBackups");
+        if (!backupFolder.exists()) {
+            backupFolder.mkdirs(); // Create the folder if it doesn't exist
+        }
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("UserCoins");
 
@@ -40,7 +48,8 @@ public class DatabaseDumpService {
 
             System.out.println("SQL IS BACKED UP TO EXCEL FILE.");
         } catch (IOException e) {
-            e.printStackTrace();
+            lgr().info(e.toString());
+            return e.toString();
         }
         return "SQL is backed up to file";
     }

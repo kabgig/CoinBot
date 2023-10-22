@@ -82,8 +82,12 @@ public class BotService extends TelegramLongPollingBot {
         var msg = update.getMessage();
         var userid = msg.getChatId();
         activeChatService.checkUser(userid);
-
-        var response = proceedCommand(msg);
+        String response;
+        if (coinMarketCapService.isUpdateInProgress()) {
+            response = "Database update is in progress, Please try again later";
+        } else {
+            response = proceedCommand(msg);
+        }
         if (!response.equals("")) sendText(userid, response);
     }
 
@@ -91,10 +95,9 @@ public class BotService extends TelegramLongPollingBot {
         String cmd = msg.getText();
         lgr().info("Proceeding command: " + cmd);
 
-        if (cmd.equals(START))
-            return MENU;
+        if (cmd.equals(START)) return MENU;
 
-        if (cmd.equals(ADDCOINS))
+        if (cmd.equals(ADDCOINS)) {
             return "In order to subscribe, send coin symbol " +
                     "and amount you have.\n If you don't have crypto write only symbol.\n\n" +
                     "For example:\n" +
@@ -102,20 +105,25 @@ public class BotService extends TelegramLongPollingBot {
                     "ETH 12.41\n" +
                     "LTC\n" +
                     "etc";
+        }
 
-        if (cmd.equals(MYCOINS))
+        if (cmd.equals(MYCOINS)) {
             return getMyCoins(msg.getChatId()) + "\n ---- \n" + MENU;
+        }
 
-        if (cmd.equals(UPDATE))
+        if (cmd.equals(UPDATE)) {
             return "To update existing coin, type coin symbol and new amount.\n" +
                     "For example:\n" +
                     "BTC 1.37";
+        }
 
-        if (cmd.equals(DELETE))
+        if (cmd.equals(DELETE)) {
             return "Which coin you want to delete?\n" + getDeleteMenu(msg);
+        }
 
-        if (cmd.startsWith("/delete"))
+        if (cmd.startsWith("/delete")) {
             return processDeleteCommand(cmd, msg);
+        }
 
         if (cmd.equals(NOTsON)) {
             activeChatService.setNotificationsOn(msg.getChatId());
@@ -132,34 +140,47 @@ public class BotService extends TelegramLongPollingBot {
             return "Admin message is processed";
         }
 
-        if (cmd.equalsIgnoreCase("log:")){
+        if (cmd.equalsIgnoreCase("log:")) {
             return sendLogs();
         }
 
-        if (cmd.equals(ADMIN_SET)){
+        if (cmd.toLowerCase().startsWith("log:-")) {
+            int i = Integer.parseInt(cmd.substring(5));
+            return sendOldLogs(i);
+        }
+
+        if (cmd.equals(ADMIN_SET)) {
             return setAdmin(msg);
         }
 
-        if (cmd.equalsIgnoreCase("sqlBackup:")){
-            databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
+        if (cmd.equalsIgnoreCase("sqlBackup:")) {
+            var res = databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
+            sendText(adminId, res);
             return sendSql();
-
         }
 
         if (cmd.equals(ADMIN_REFRESH)) {
-            coinMarketCapService.updateDatabase();
+            var res = coinMarketCapService.updateDatabase();
+            sendText(adminId, res);
             return "Coin's data is updated";
         }
 
-        if (cmd.equalsIgnoreCase(FAQ))
-            return adminFAQ;
+        if (cmd.equalsIgnoreCase(FAQ)) return adminFAQ;
 
-        if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS))
+        if (!cmd.equals(MYCOINS) && !cmd.equals(ADDCOINS)) {
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ------- \n" + MENU;
-
+        }
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
     }
 
+    private String sendOldLogs(int daysBack) {
+        LocalDateTime oldDay = LocalDateTime.now().minusDays(daysBack);
+        String date = oldDay.getYear() + "-" +
+                oldDay.getMonthValue() + "-" +
+                oldDay.getDayOfMonth();
+        sendDocument("logs/log-" + date + ".txt", "Logs");
+        return "";
+    }
 
 
     private String setAdmin(Message msg) {
@@ -203,17 +224,17 @@ public class BotService extends TelegramLongPollingBot {
             double d7 = roundDouble(item.getUsd_percentChange7d());
             if (h24 < 0) h24Arrow = " 🔴 ";
             if (d7 < 0) d7Arrow = " 🔴 ";
-            double amountOfCrypto = userCoinsService.getCryptoAmount(chatId,item.getId());
+            double amountOfCrypto = userCoinsService.getCryptoAmount(chatId, item.getId());
             double coinPrice = roundDouble(item.getUsd_price());
             double value = roundDouble(coinPrice * amountOfCrypto);
             result = result + "\n\n" +
                     item.getName() + " " +
                     item.getSymbol() + "\n" +
                     "🏷️ Coin price: " + coinPrice + " $\n" +
-                    "🪙 Your amount: " + amountOfCrypto +"\n" +
+                    "🪙 Your amount: " + amountOfCrypto + "\n" +
                     "💰 Your value: " + value + " $\n" +
-                    "%24h "+ h24Arrow + h24  + "\n" +
-                    "%7d "+ d7Arrow + d7  + "\n" +
+                    "%24h " + h24Arrow + h24 + "\n" +
+                    "%7d " + d7Arrow + d7 + "\n" +
                     "-------";
             totalValue += value;
         }
@@ -230,7 +251,7 @@ public class BotService extends TelegramLongPollingBot {
         String[] cmdArray = cmd.trim().toUpperCase().split(" ");
         cmd = cmdArray[0];
         double amountOfCrypto = 0.0;
-        if(cmdArray.length > 1) amountOfCrypto = Double.parseDouble(cmdArray[1]);
+        if (cmdArray.length > 1) amountOfCrypto = Double.parseDouble(cmdArray[1]);
 
         if (coinSymbols.contains(cmd)) {
             CurrentData coinData = coinMarketCapService.getOneCoinData(cmd);
@@ -245,7 +266,7 @@ public class BotService extends TelegramLongPollingBot {
                 UserCoins existingCoin = oneUserCoin.get();
                 existingCoin.setAmount(amountOfCrypto);
                 //если че то сначала надо удалить
-                userCoinsService.deleteByCoinAndUserId(existingCoin.getCoinId(),msg.getChatId());
+                userCoinsService.deleteByCoinAndUserId(existingCoin.getCoinId(), msg.getChatId());
                 userCoinsService.addCoinSubscribtion(
                         existingCoin.getChatId(),
                         existingCoin.getCoinId(),
@@ -271,7 +292,8 @@ public class BotService extends TelegramLongPollingBot {
         try {
             execute(sm);                        //Actually sending the message
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);      //Any error will be printed here
+            sendText(adminId, e.toString());
+            System.out.println(e);      //Any error will be printed here
         }
     }
 
@@ -296,7 +318,8 @@ public class BotService extends TelegramLongPollingBot {
         try {
             execute(sendDocumentRequest);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            sendText(adminId, e.toString());
+            System.out.println(e);
         }
     }
 }

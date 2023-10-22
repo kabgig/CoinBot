@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.kabgig.CoinBot.CoinMarketCap.entity.CurrentData;
 import com.kabgig.CoinBot.CoinMarketCap.entity.UserCoins;
 import com.kabgig.CoinBot.CoinMarketCap.repository.CurrentDataRepository;
+import lombok.Data;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import static com.kabgig.CoinBot.CoinMarketCap.utils.utils.*;
 import static com.kabgig.CoinBot.Utils.Logger.lgr;
 
 @Service
+@Data
 public class CoinMarketCapService {
 
     @Autowired
@@ -41,18 +44,7 @@ public class CoinMarketCapService {
     private static String uriLatest = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
     private List<CurrentData> currentDataArray = null;
     private List<CurrentData> currentSavingArray = null;
-
-    //public List<CurrentData> getCoinsData() {
-//        if (!isCurrentdate()) {
-//            updateDatabase();
-//            lgr().info("DATABASE IS REFRESHED");
-//        } else if(currentDataArray != null || !currentDataArray.isEmpty()){}
-//        else {
-//            currentDataArray = currentDataRepository.findAll();
-//            lgr().info("FETCHED DATA FROM DB");
-//        }
-//        return currentDataArray;
-//    }
+    private boolean updateInProgress = false;
 
     public boolean isCurrentdate() {
         boolean isCurrent;
@@ -126,7 +118,7 @@ public class CoinMarketCapService {
 //            currentData.setBtc_lastUpdated(btcObject.get("last_updated").getAsString());
 
             result.add(currentData);
-            lgr().info("ADDED N="+ count +": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
+            lgr().info("ADDED N=" + count + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
             count++;
         }
         return result;
@@ -202,7 +194,11 @@ public class CoinMarketCapService {
         return currentDataRepository.findBySymbol(coinSymbol);
     }
 
-    public void updateDatabase() {
+    public String updateDatabase() {
+        updateInProgress = true;
+        LocalDateTime start = LocalDateTime.now();
+        int N = 1;
+        int count = 0;
         try {
             int batchSize = 1000; // Set your preferred batch size
             List<CurrentData> batchToSave = new ArrayList<>(batchSize); // Create a list to accumulate entities
@@ -216,29 +212,36 @@ public class CoinMarketCapService {
                 currentSavingArray = currentDataArray;
                 lgr().info("STARTING SAVING DATA TO REPOSITORY");
                 int countSize = currentSavingArray.size();
-                int count = 0;
-                int N = 1;
                 for (CurrentData currentData : currentSavingArray) {
-                    lgr().info("PREPARING ENTITY N="+ N + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
+                    lgr().info("PREPARING ENTITY N=" + N + ": " + "id=" + currentData.getId() + " " + currentData.getName() + " " + currentData.getSymbol());
                     //currentDataRepository.save(currentData);
                     batchToSave.add(currentData); // Add the entity to the batch
                     N++;
                     // Check if the batch size is reached and then save the batch
-                    if (batchToSave.size() == batchSize || (countSize - count) == batchSize) {
+                    if (batchToSave.size() == batchSize || (countSize - count) == batchToSave.size()) {
                         currentDataRepository.saveAll(batchToSave);
+                        count += batchToSave.size();
+                        lgr().info("SAVED " + batchToSave.size() + " entities, total = " + count);
                         batchToSave.clear(); // Clear the batch for the next iteration
-                        count += batchSize;
-                        lgr().info("PARTLY SAVED---------------------");
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.toString());
+                return e.toString();
             }
         } catch (IOException e) {
             System.out.println("Error: can't access content - " + e.toString());
+            return e.toString();
         } catch (URISyntaxException e) {
             System.out.println("Error: Invalid URL " + e.toString());
+            return e.toString();
         }
+        Duration duration = Duration.between(start, LocalDateTime.now());
+        updateInProgress = false;
+        return "Executed daily database refresh, processed " +
+                count + " entities during " +
+                duration.toMinutes() + " minutes " +
+                duration.toSeconds() + " seconds";
     }
 }
 
