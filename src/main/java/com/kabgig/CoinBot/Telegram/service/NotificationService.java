@@ -3,6 +3,7 @@ package com.kabgig.CoinBot.Telegram.service;
 import com.kabgig.CoinBot.CoinMarketCap.service.CoinMarketCapService;
 import com.kabgig.CoinBot.CoinMarketCap.service.UserCoinsService;
 import com.kabgig.CoinBot.Telegram.entity.ActiveChat;
+import com.kabgig.CoinBot.Utils.Logger;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -64,5 +65,6 @@ public class NotificationService {
     @PostConstruct
     private void startupNotification(){
         botService.sendText(botService.getAdminId(), "Bot is started");
+        Logger.lgr().info("Bot STARTED @PostConstruct");
     }
 }
