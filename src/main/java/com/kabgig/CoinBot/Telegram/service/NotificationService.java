@@ -58,6 +58,6 @@ public class NotificationService {
 
     @Bean
     private void startupNotification(){
-        botService.sendText(botService.getAdminId(), "Bot is started");
+        botService.sendText(botService.getAdminId(), "Bot is started now");
     }
 }
