@@ -61,8 +61,8 @@ public class NotificationService {
         if(botService.isPing()) botService.sendText(botService.getAdminId(), "ping OK");
     }
 
-    @Bean
+    @PostConstruct
     private void startupNotification(){
-        botService.sendText(botService.getAdminId(), "Bot is started now!");
+        botService.sendText(botService.getAdminId(), "Bot is started");
     }
 }
