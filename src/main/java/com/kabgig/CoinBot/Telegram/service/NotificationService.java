@@ -27,7 +27,7 @@ public class NotificationService {
 
 
     @PostConstruct //or @Bean
-    @Scheduled(cron = "0 50 23 * * *")
+    @Scheduled(cron = "0 30 3 * * *")
     public void dbRefresh() {
         if (!coinMarketCapService.isCurrentdate()) {
             coinMarketCapService.updateDatabase();
@@ -36,28 +36,33 @@ public class NotificationService {
         }
     }
 
-    @Scheduled(cron = "0 0 11 * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void notifySubscribers() throws InterruptedException {
         List<ActiveChat> uniqueChats = activeChatService.getUniqueUsersChats();
         for (var chat : uniqueChats) {
             String myCoins = botService.getMyCoins(chat.getChatId());
             if (chat.isNotifications()) {
-                botService.sendText(chat.getChatId(), "Daily update:" + myCoins);
+                botService.sendText(chat.getChatId(), myCoins);
             }
         }
         lgr().info("DAILY UPDATE SENT " + LocalDateTime.now());
     }
-    @Scheduled(cron = "0 0 11 * * *")
+    @Scheduled(cron = "0 58 23 * * *")
     public void regularLogSend() throws InterruptedException {
         lgr().info("SENT " + botService.sendLogs());
     }
-    @Scheduled(cron = "0 1 11 * * *")
+    @Scheduled(cron = "0 59 23 * * *")
     public void regularSqlBackupSend() throws InterruptedException {
         lgr().info("SENT " + botService.sendSql());
+    }
+    @Scheduled(cron = "0 0 */3 * * *")
+    public void pingOk() throws InterruptedException {
+        lgr().info("PING OK");
+        if(botService.isPing()) botService.sendText(botService.getAdminId(), "ping OK");
     }
 
     @Bean
     private void startupNotification(){
-        botService.sendText(botService.getAdminId(), "Bot is started");
+        botService.sendText(botService.getAdminId(), "Bot is started now!");
     }
 }

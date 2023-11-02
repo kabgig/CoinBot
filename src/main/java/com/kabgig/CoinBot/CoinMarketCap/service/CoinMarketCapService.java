@@ -253,7 +253,7 @@ public class CoinMarketCapService {
     @Async
     public void updateDatabase() {
         updateInProgress = true;
-        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
+        lgr().info("UPDATE IN PROGRESS: " + updateInProgress);
         LocalDateTime start = LocalDateTime.now();
         int N = 1;
         int count = 0;
@@ -286,7 +286,7 @@ public class CoinMarketCapService {
         }
         Duration duration = Duration.between(start, LocalDateTime.now());
         updateInProgress = false;
-        lgr().info("UPDATE IN PROGRESS: " + updateInProgress + " THREAD: " + Thread.currentThread().getName());
+        lgr().info("UPDATE IN PROGRESS: " + updateInProgress);
         updateResultMessage =
                 "Executed daily database refresh, processed " +
                 count + " entities during " +

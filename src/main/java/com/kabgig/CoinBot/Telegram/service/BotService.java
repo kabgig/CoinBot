@@ -36,6 +36,7 @@ public class BotService extends TelegramLongPollingBot {
     private DatabaseDumpService databaseDumpService;
 
     private Long adminId = 449744439L;
+    private boolean isPing = true;
 
 
     //COMMANDS
@@ -87,25 +88,21 @@ public class BotService extends TelegramLongPollingBot {
             response = "Database update is in progress, Please try again later";
         } else {
             response = proceedCommand(msg);
-            lgr().info("THREAD: " + Thread.currentThread().getName());
         }
         if (!response.equals("")) sendText(userid, response);
     }
 
     private String proceedCommand(Message msg) {
         String cmd = msg.getText();
-        lgr().info("PROCEEDING COMMAND: " + cmd + " THREAD: " + Thread.currentThread().getName());
+        lgr().info("PROCEEDING COMMAND: " + cmd);
 
         if (cmd.equals(START)) return MENU;
 
         if (cmd.equals(ADDCOINS)) {
             return "In order to subscribe, send coin symbol " +
-                    "and amount you have.\n If you don't have crypto write only symbol.\n\n" +
+                    "and amount you have.\n If you don't have crypto, write only symbol.\n\n" +
                     "For example:\n" +
-                    "BTC 0.03\n" +
-                    "ETH 12.41\n" +
-                    "LTC\n" +
-                    "etc";
+                    "BTC 0.03";
         }
 
         if (cmd.equals(MYCOINS)) {
@@ -154,6 +151,15 @@ public class BotService extends TelegramLongPollingBot {
             return setAdmin(msg);
         }
 
+        if (cmd.equalsIgnoreCase("ping:")) {
+            if (isPing) {
+                isPing = false;
+            } else {
+                isPing = true;
+            }
+            return "Ping is " + isPing;
+        }
+
         if (cmd.equalsIgnoreCase("sqlBackup:")) {
             var res = databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
             sendText(adminId, res);
@@ -182,7 +188,6 @@ public class BotService extends TelegramLongPollingBot {
         sendDocument("logs/log-" + date + ".txt", "Logs");
         return "";
     }
-
 
     private String setAdmin(Message msg) {
         adminId = msg.getChatId();
