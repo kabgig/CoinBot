@@ -65,6 +65,6 @@ public class NotificationService {
     @PostConstruct
     private void startupNotification(){
         botService.sendText(botService.getAdminId(), "Bot is started");
-        Logger.lgr().info("Bot STARTED @PostConstruct");
+        Logger.lgr().info("Bot STARTED");
     }
 }
