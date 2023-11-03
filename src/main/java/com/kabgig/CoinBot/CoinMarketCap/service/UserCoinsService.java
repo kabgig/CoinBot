@@ -8,18 +8,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserCoinsService {
     @Autowired
     private UserCoinsRepository userCoinsRepository;
 
-    public UserCoins addCoinSubscribtion(Long chatId, Long coinId, double amountOfCrypto){
+    public UserCoins addCoinSubscribtion(Long chatId, Long coinId, double amountOfCrypto) {
         UserCoins userCoin = new UserCoins();
         userCoin.setCoinId(coinId);
         userCoin.setChatId(chatId);
         userCoin.setAmount(amountOfCrypto);
         return userCoinsRepository.save(userCoin);
+    }
+
+    public List<Long> getDistinctCoinIds() {
+        return userCoinsRepository
+                .findAll()
+                .stream()
+                .map(userCoinEntity -> userCoinEntity.getCoinId())
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public List<UserCoins> getUserCoins(Long chatId) {
@@ -44,7 +54,8 @@ public class UserCoinsService {
                 .get()
                 .getAmount();
     }
-    public List<UserCoins> getAllUserCoins(){
+
+    public List<UserCoins> getAllUserCoins() {
         return userCoinsRepository.findAll();
     }
 }

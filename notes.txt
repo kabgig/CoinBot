@@ -9,6 +9,6 @@ docker run -d -p 7777:3306
 -e MYSQL_DATABASE=mydatabase mysql:8.0
 
 cache only used coins
-fix log files
+
 LOG all commands "update", etc
 log all errors on debug level, because it logs only what i log in the app

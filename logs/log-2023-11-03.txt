@@ -33,3 +33,174 @@
 12:29:33.324 INFO  [main] - Started CoinBotApplication in 4.504 seconds (process running for 4.713)
 12:30:06.902 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: log:-1
 12:30:13.784 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: log:
+12:44:40.200 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 28395 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+12:44:40.201 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+12:44:40.201 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+12:44:44.402 INFO  [main] - Bot STARTED
+12:44:44.460 INFO  [main] - THE DATE IS CURRENT
+12:44:45.065 INFO  [main] - Started CoinBotApplication in 5.208 seconds (process running for 5.523)
+12:45:04.337 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: refreshCoins
+12:45:04.339 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: true
+12:45:06.994 INFO  [SimpleAsyncTaskExecutor-1] - EXECUTED makeApiCall() AND GOT RESULT
+12:45:07.075 INFO  [SimpleAsyncTaskExecutor-1] - PROCESSED DATA ARRAY AND READY FOR MARSHALLING
+12:45:07.075 INFO  [SimpleAsyncTaskExecutor-1] - STARTED ADDING ENTITIES TO THE LIST
+12:45:07.232 INFO  [SimpleAsyncTaskExecutor-1] - ADDED 5001 entities to list
+12:45:07.232 INFO  [SimpleAsyncTaskExecutor-1] - STARTING SAVING DATA TO REPOSITORY
+12:45:08.727 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 1000
+12:45:09.803 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 2000
+12:45:10.813 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 3000
+12:45:11.797 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 4000
+12:45:12.841 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 5000
+12:45:12.841 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: false
+12:45:12.842 INFO  [SimpleAsyncTaskExecutor-1] - Executed daily database refresh, processed 5000 entities during 0 minutes 8 seconds
+12:50:07.789 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /mycoins
+12:52:19.399 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 28658 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+12:52:19.400 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+12:52:19.401 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+12:52:23.274 INFO  [main] - Bot STARTED
+12:52:23.340 INFO  [main] - THE DATE IS CURRENT
+12:52:23.969 INFO  [main] - Started CoinBotApplication in 4.864 seconds (process running for 5.087)
+13:05:49.978 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29087 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:05:49.979 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:05:49.979 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:05:52.219 INFO  [main] - THE DATE IS CURRENT
+13:05:54.267 INFO  [main] - Bot STARTED
+13:05:54.839 INFO  [main] - Started CoinBotApplication in 5.143 seconds (process running for 5.437)
+13:10:48.381 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29241 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:10:48.382 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:10:48.382 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:10:50.462 INFO  [main] - THE DATE IS CURRENT
+13:10:52.464 INFO  [main] - Bot STARTED
+13:10:53.114 INFO  [main] - Started CoinBotApplication in 4.999 seconds (process running for 5.206)
+13:11:04.652 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /mycoins
+13:11:29.455 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+13:12:47.333 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29311 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:12:47.333 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:12:47.334 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:12:49.867 INFO  [main] - THE DATE IS CURRENT
+13:12:51.273 INFO  [main] - Bot STARTED
+13:12:51.847 INFO  [main] - Started CoinBotApplication in 4.799 seconds (process running for 5.068)
+13:12:57.719 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+13:14:24.075 INFO  [dummy_bot Telegram Executor] - LTC COIN UPDATED WITH NEW AMOUNT: 0.32
+13:16:21.617 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29412 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:16:21.617 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:16:21.618 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:16:23.824 INFO  [main] - THE DATE IS CURRENT
+13:16:25.755 INFO  [main] - Bot STARTED
+13:16:26.484 INFO  [main] - Started CoinBotApplication in 5.1 seconds (process running for 5.392)
+13:16:27.453 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /delete
+13:16:37.844 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+13:18:17.564 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29481 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:18:17.565 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:18:17.565 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:18:19.680 INFO  [main] - THE DATE IS CURRENT
+13:18:21.107 INFO  [main] - Bot STARTED
+13:18:21.656 INFO  [main] - Started CoinBotApplication in 4.392 seconds (process running for 4.608)
+13:18:25.769 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29489 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:18:25.770 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:18:25.771 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:18:29.487 INFO  [main] - Bot STARTED
+13:18:29.544 INFO  [main] - THE DATE IS CURRENT
+13:18:30.156 INFO  [main] - Started CoinBotApplication in 4.627 seconds (process running for 4.939)
+13:18:36.092 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+13:19:36.775 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29536 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+13:19:36.776 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+13:19:36.776 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+13:19:40.964 INFO  [main] - Bot STARTED
+13:19:41.016 INFO  [main] - THE DATE IS CURRENT
+13:19:41.596 INFO  [main] - Started CoinBotApplication in 5.108 seconds (process running for 5.511)
+13:19:49.416 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+14:02:31.392 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 29930 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:02:31.393 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:02:31.393 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:02:35.076 INFO  [main] - Bot STARTED
+14:02:35.117 INFO  [main] - THE DATE IS CURRENT
+14:02:35.693 INFO  [main] - Started CoinBotApplication in 4.569 seconds (process running for 4.826)
+14:02:50.034 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+14:06:16.162 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30043 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:06:16.162 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:06:16.163 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:06:18.579 INFO  [main] - THE DATE IS CURRENT
+14:06:20.677 INFO  [main] - Bot STARTED
+14:06:21.270 INFO  [main] - Started CoinBotApplication in 5.349 seconds (process running for 5.593)
+14:06:35.733 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+14:07:10.377 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30092 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:07:10.378 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:07:10.378 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:07:12.774 INFO  [main] - THE DATE IS CURRENT
+14:07:14.722 INFO  [main] - Bot STARTED
+14:07:15.310 INFO  [main] - Started CoinBotApplication in 5.203 seconds (process running for 5.608)
+14:07:19.538 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+14:08:46.907 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30156 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:08:46.908 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:08:46.909 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:08:50.872 INFO  [main] - Bot STARTED
+14:08:50.915 INFO  [main] - THE DATE IS CURRENT
+14:08:51.528 INFO  [main] - Started CoinBotApplication in 4.888 seconds (process running for 5.134)
+14:09:17.502 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: LTC 0.32
+14:09:17.811 INFO  [dummy_bot Telegram Executor] - LTC COIN ADDED TO SUBSCRIPTION
+14:09:22.430 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /mycoins
+14:10:08.205 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30215 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:10:08.206 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:10:08.207 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:10:10.396 INFO  [main] - THE DATE IS CURRENT
+14:10:12.740 INFO  [main] - Bot STARTED
+14:10:13.356 INFO  [main] - Started CoinBotApplication in 5.427 seconds (process running for 5.712)
+14:10:25.061 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: ADA 5000
+14:12:38.173 INFO  [dummy_bot Telegram Executor] - ADA COIN ADDED TO SUBSCRIPTION
+14:13:50.722 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: USDT 8000
+14:14:33.888 INFO  [dummy_bot Telegram Executor] - USDT COIN ADDED TO SUBSCRIPTION
+14:27:17.524 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30761 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:27:17.528 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:27:17.529 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:27:21.666 INFO  [main] - Bot STARTED
+14:27:21.726 INFO  [main] - THE DATE IS CURRENT
+14:27:22.267 INFO  [main] - Started CoinBotApplication in 5.024 seconds (process running for 5.29)
+14:27:26.407 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /mycoins
+14:27:48.612 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: USDC 8000
+14:27:48.778 INFO  [dummy_bot Telegram Executor] - USDC COIN ADDED TO SUBSCRIPTION
+14:28:02.952 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /update
+14:28:10.850 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: USDC 10000
+14:28:10.984 INFO  [dummy_bot Telegram Executor] - USDC COIN UPDATED WITH NEW AMOUNT: 10000.0
+14:28:16.375 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /delete
+14:28:20.657 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /deleteLTC
+14:28:22.689 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /mycoins
+14:29:28.205 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30847 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:29:28.206 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:29:28.206 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:29:30.279 INFO  [main] - THE DATE IS CURRENT
+14:29:31.773 INFO  [main] - Bot STARTED
+14:29:32.402 INFO  [main] - Started CoinBotApplication in 4.454 seconds (process running for 4.658)
+14:30:13.841 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /delete
+14:30:16.917 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /deleteUSDC
+14:30:19.405 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /delete
+14:30:21.884 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /deleteUSDT
+14:30:25.789 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /addcoins
+14:30:36.563 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: USDT 80000.4
+14:30:36.845 INFO  [dummy_bot Telegram Executor] - [CurrentData(id=1, name=Bitcoin, symbol=BTC, slug=bitcoin, cmcRank=1, numMarketPairs=10518, circulatingSupply=1.9531681E7, totalSupply=1.9531681E7, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T04:43, dateAdded=2010-07-13T00:00, tags=null, usd_price=34592.51647167451, usd_volume24h=1.9776784123441326E10, usd_volumeChange24h=-20.1519, usd_percentChange1h=-0.27119765, usd_percentChange24h=-2.64528021, usd_percentChange7d=1.54891867, usd_marketCap=6.756499967119921E11, usd_marketCapDominance=52, usd_fullyDilutedMarketCap=7.2644284590516E11, usd_lastUpdated=2023-11-03T04:43), CurrentData(id=2010, name=Cardano, symbol=ADA, slug=cardano, cmcRank=8, numMarketPairs=958, circulatingSupply=3.5248619632348E10, totalSupply=3.6320189326908E10, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T04:42, dateAdded=2017-10-01T00:00, tags=null, usd_price=0.31594451797630624, usd_volume24h=4.613676628013799E8, usd_volumeChange24h=28.769, usd_percentChange1h=0.10598437, usd_percentChange24h=2.22253691, usd_percentChange7d=11.03458483, usd_marketCap=1.1136608139072353E10, usd_marketCapDominance=0, usd_fullyDilutedMarketCap=1.421750330893E10, usd_lastUpdated=2023-11-03T04:42), CurrentData(id=825, name=Tether USDt, symbol=USDT, slug=tether, cmcRank=3, numMarketPairs=64963, circulatingSupply=8.520226783906921E10, totalSupply=8.76256150237108E10, maxSupply=0.0, infiniteSupply=true, lastUpdated=2023-11-03T04:42, dateAdded=2015-02-25T00:00, tags=null, usd_price=1.0004288280121292, usd_volume24h=3.599447376322652E10, usd_volumeChange24h=-16.045, usd_percentChange1h=0.00558171, usd_percentChange24h=-0.00620476, usd_percentChange7d=0.02791585, usd_marketCap=8.523880495821555E10, usd_marketCapDominance=6, usd_fullyDilutedMarketCap=8.766319134201E10, usd_lastUpdated=2023-11-03T04:42)]
+14:30:36.845 INFO  [dummy_bot Telegram Executor] - USDT COIN ADDED TO SUBSCRIPTION
+14:32:37.368 INFO  [main] - Starting CoinBotApplication using Java 17.0.7 with PID 30957 (/Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH/target/classes started by ansarismagilov in /Users/ansarismagilov/Desktop/CODE/My Projects/CoinBotMH)
+14:32:37.369 DEBUG [main] - Running with Spring Boot v3.1.4, Spring v6.0.12
+14:32:37.369 INFO  [main] - No active profile set, falling back to 1 default profile: "default"
+14:32:41.430 INFO  [main] - Bot STARTED
+14:32:41.468 INFO  [main] - THE DATE IS CURRENT
+14:32:42.086 INFO  [main] - Started CoinBotApplication in 4.984 seconds (process running for 5.19)
+14:32:47.075 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: /addcoins
+14:33:00.325 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: USDC 400
+14:33:00.606 INFO  [dummy_bot Telegram Executor] - Current array size is: 4 [CurrentData(id=1, name=Bitcoin, symbol=BTC, slug=bitcoin, cmcRank=1, numMarketPairs=10518, circulatingSupply=1.9531681E7, totalSupply=1.9531681E7, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T04:43, dateAdded=2010-07-13T00:00, tags=null, usd_price=34592.51647167451, usd_volume24h=1.9776784123441326E10, usd_volumeChange24h=-20.1519, usd_percentChange1h=-0.27119765, usd_percentChange24h=-2.64528021, usd_percentChange7d=1.54891867, usd_marketCap=6.756499967119921E11, usd_marketCapDominance=52, usd_fullyDilutedMarketCap=7.2644284590516E11, usd_lastUpdated=2023-11-03T04:43), CurrentData(id=2010, name=Cardano, symbol=ADA, slug=cardano, cmcRank=8, numMarketPairs=958, circulatingSupply=3.5248619632348E10, totalSupply=3.6320189326908E10, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T04:42, dateAdded=2017-10-01T00:00, tags=null, usd_price=0.31594451797630624, usd_volume24h=4.613676628013799E8, usd_volumeChange24h=28.769, usd_percentChange1h=0.10598437, usd_percentChange24h=2.22253691, usd_percentChange7d=11.03458483, usd_marketCap=1.1136608139072353E10, usd_marketCapDominance=0, usd_fullyDilutedMarketCap=1.421750330893E10, usd_lastUpdated=2023-11-03T04:42), CurrentData(id=825, name=Tether USDt, symbol=USDT, slug=tether, cmcRank=3, numMarketPairs=64963, circulatingSupply=8.520226783906921E10, totalSupply=8.76256150237108E10, maxSupply=0.0, infiniteSupply=true, lastUpdated=2023-11-03T04:42, dateAdded=2015-02-25T00:00, tags=null, usd_price=1.0004288280121292, usd_volume24h=3.599447376322652E10, usd_volumeChange24h=-16.045, usd_percentChange1h=0.00558171, usd_percentChange24h=-0.00620476, usd_percentChange7d=0.02791585, usd_marketCap=8.523880495821555E10, usd_marketCapDominance=6, usd_fullyDilutedMarketCap=8.766319134201E10, usd_lastUpdated=2023-11-03T04:42), CurrentData(id=3408, name=USDC, symbol=USDC, slug=usd-coin, cmcRank=6, numMarketPairs=14752, circulatingSupply=2.447687008483994E10, totalSupply=2.447687008483994E10, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T04:43, dateAdded=2018-10-08T00:00, tags=null, usd_price=1.000193384278976, usd_volume24h=4.426360665565792E9, usd_volumeChange24h=-15.9667, usd_percentChange1h=0.00786993, usd_percentChange24h=0.0128692, usd_percentChange7d=0.0188248, usd_marketCap=2.4481603526712887E10, usd_marketCapDominance=1, usd_fullyDilutedMarketCap=2.448160352671E10, usd_lastUpdated=2023-11-03T04:43)]
+14:33:00.606 INFO  [dummy_bot Telegram Executor] - USDC COIN ADDED TO SUBSCRIPTION
+14:33:34.151 INFO  [dummy_bot Telegram Executor] - PROCEEDING COMMAND: refreshCoins
+14:33:34.156 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: true
+14:33:36.663 INFO  [SimpleAsyncTaskExecutor-1] - EXECUTED makeApiCall() AND GOT RESULT
+14:33:36.746 INFO  [SimpleAsyncTaskExecutor-1] - PROCESSED DATA ARRAY AND READY FOR MARSHALLING
+14:33:36.746 INFO  [SimpleAsyncTaskExecutor-1] - STARTED ADDING ENTITIES TO THE LIST
+14:33:36.858 INFO  [SimpleAsyncTaskExecutor-1] - ADDED 5001 entities to list
+14:33:36.858 INFO  [SimpleAsyncTaskExecutor-1] - STARTING SAVING DATA TO REPOSITORY
+14:33:38.303 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 1000
+14:33:39.397 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 2000
+14:33:40.410 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 3000
+14:33:41.398 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 4000
+14:33:42.445 INFO  [SimpleAsyncTaskExecutor-1] - SAVED 1000 entities, total = 5000
+14:33:42.463 INFO  [SimpleAsyncTaskExecutor-1] - Current array size is: 4 [CurrentData(id=1, name=Bitcoin, symbol=BTC, slug=bitcoin, cmcRank=1, numMarketPairs=10518, circulatingSupply=1.9531725E7, totalSupply=1.9531725E7, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T06:32, dateAdded=2010-07-13T00:00, tags=null, usd_price=34572.81802723051, usd_volume24h=1.9412260459188625E10, usd_volumeChange24h=-24.3318, usd_percentChange1h=0.18238953, usd_percentChange24h=-1.85165149, usd_percentChange7d=1.29664315, usd_marketCap=6.752667741829088E11, usd_marketCapDominance=52, usd_fullyDilutedMarketCap=7.2602917857184E11, usd_lastUpdated=2023-11-03T06:32), CurrentData(id=2010, name=Cardano, symbol=ADA, slug=cardano, cmcRank=8, numMarketPairs=958, circulatingSupply=3.5248618429407E10, totalSupply=3.6320189326908E10, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T06:31, dateAdded=2017-10-01T00:00, tags=null, usd_price=0.3181552082002834, usd_volume24h=4.651331003976818E8, usd_volumeChange24h=32.0896, usd_percentChange1h=1.27745016, usd_percentChange24h=4.30076691, usd_percentChange7d=11.50783362, usd_marketCap=1.121453153518033E10, usd_marketCapDominance=0, usd_fullyDilutedMarketCap=1.431698436901E10, usd_lastUpdated=2023-11-03T06:31), CurrentData(id=825, name=Tether USDt, symbol=USDT, slug=tether, cmcRank=3, numMarketPairs=64965, circulatingSupply=8.520226783906921E10, totalSupply=8.76256150237108E10, maxSupply=0.0, infiniteSupply=true, lastUpdated=2023-11-03T06:31, dateAdded=2015-02-25T00:00, tags=null, usd_price=1.0003153648870722, usd_volume24h=3.522174960069817E10, usd_volumeChange24h=-19.9618, usd_percentChange1h=-0.00381189, usd_percentChange24h=-0.03863964, usd_percentChange7d=0.02581916, usd_marketCap=8.522913764264458E10, usd_marketCapDominance=6, usd_fullyDilutedMarketCap=8.76532490659E10, usd_lastUpdated=2023-11-03T06:31), CurrentData(id=3408, name=USDC, symbol=USDC, slug=usd-coin, cmcRank=6, numMarketPairs=14752, circulatingSupply=2.4474434398258396E10, totalSupply=2.4474434398258396E10, maxSupply=0.0, infiniteSupply=false, lastUpdated=2023-11-03T06:32, dateAdded=2018-10-08T00:00, tags=null, usd_price=1.000058397191776, usd_volume24h=4.325154424253238E9, usd_volumeChange24h=-20.499, usd_percentChange1h=8.3465E-4, usd_percentChange24h=0.0072971, usd_percentChange7d=0.00370369, usd_marketCap=2.4475863636497562E10, usd_marketCapDominance=1, usd_fullyDilutedMarketCap=2.44758636365E10, usd_lastUpdated=2023-11-03T06:32)]
+14:33:42.464 INFO  [SimpleAsyncTaskExecutor-1] - UPDATE IN PROGRESS: false
+14:33:42.466 INFO  [SimpleAsyncTaskExecutor-1] - Executed daily database refresh, processed 5000 entities during 0 minutes 8 seconds

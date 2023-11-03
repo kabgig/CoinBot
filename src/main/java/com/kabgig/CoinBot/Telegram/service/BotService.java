@@ -45,6 +45,7 @@ public class BotService extends TelegramLongPollingBot {
     private String realBotToken = "6634826109:AAElkKIzaTJuWfeE0f-Dug8wPTKel8WhnjU";
     private String realBotName = "CoinBot";
 
+    //CREDENTIALS
     @Override
     public String getBotUsername() {
         return realBotName;
@@ -265,11 +266,11 @@ public class BotService extends TelegramLongPollingBot {
                         msg.getChatId(),
                         coinData.getId(),
                         amountOfCrypto);
+                coinMarketCapService.currentDataCacheRefresh();
                 lgr().info(cmd + " COIN ADDED TO SUBSCRIPTION");
             } else {
                 UserCoins existingCoin = oneUserCoin.get();
                 existingCoin.setAmount(amountOfCrypto);
-                //если че то сначала надо удалить
                 userCoinsService.deleteByCoinAndUserId(existingCoin.getCoinId(), msg.getChatId());
                 userCoinsService.addCoinSubscribtion(
                         existingCoin.getChatId(),
