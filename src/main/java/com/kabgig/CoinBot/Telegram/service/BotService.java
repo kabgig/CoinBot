@@ -119,6 +119,7 @@ public class BotService extends TelegramLongPollingBot {
         }
 
         if (cmd.equals(UPDATE)) {
+            lgr().info("/update cmd is being processed");
             return "To update existing coin, type coin symbol and new amount.\n" +
                     "For example:\n" +
                     "BTC 1.37";
