@@ -254,7 +254,7 @@ public class CoinMarketCapService {
         for(long id : distinctUserCoins){
             currentDataArray.add(currentDataRepository.findById(id).get());
         }
-        lgr().info("Refreshed array size is: " + currentDataArray.size() + " " + currentDataArray);
+        lgr().info("Refreshed array size is: " + currentDataArray.size());
     }
 }
 

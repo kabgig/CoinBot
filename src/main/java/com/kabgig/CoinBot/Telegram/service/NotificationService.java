@@ -64,7 +64,7 @@ public class NotificationService {
     @PostConstruct
     private void startupNotification(){
         botService.sendText(botService.getAdminId(), "Bot is started\n" +
-                "push: fixed cache");
+                "Commit: changed welcome message");
         Logger.lgr().info("Bot STARTED");
     }
 }
