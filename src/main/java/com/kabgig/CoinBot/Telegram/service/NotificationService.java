@@ -63,7 +63,8 @@ public class NotificationService {
 
     @PostConstruct
     private void startupNotification(){
-        botService.sendText(botService.getAdminId(), "Bot is started");
+        botService.sendText(botService.getAdminId(), "Bot is started\n" +
+                "push: fixed cache");
         Logger.lgr().info("Bot STARTED");
     }
 }
