@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,24 @@ public class BotService extends TelegramLongPollingBot {
     @Autowired
     private DatabaseDumpService databaseDumpService;
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private Long adminId = 449744439L;
     private boolean isPing = true;
+    private String testBotToken = "6505439712:AAGsoPCKiIliurdCLbFxIgaXBrUgqduPNx4";
+    private String testBotName = "dummy_bot";
+    private String realBotToken = "6634826109:AAElkKIzaTJuWfeE0f-Dug8wPTKel8WhnjU";
+    private String realBotName = "CoinBot";
+
+    @Override
+    public String getBotUsername() {
+        return realBotName;
+    }
+
+    @Override
+    public String getBotToken() {
+        return realBotToken;
+    }
 
 
     //COMMANDS
@@ -68,15 +85,6 @@ public class BotService extends TelegramLongPollingBot {
                     "Log: - get log file\n" +
                     "FAQ: - all admin commands";
 
-    @Override
-    public String getBotUsername() {
-        return "CoinBot";
-    }
-
-    @Override
-    public String getBotToken() {
-        return "6634826109:AAElkKIzaTJuWfeE0f-Dug8wPTKel8WhnjU";
-    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -147,6 +155,12 @@ public class BotService extends TelegramLongPollingBot {
             return sendOldLogs(i);
         }
 
+        if (cmd.equalsIgnoreCase("sqlBackup:")) {
+            var res = databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
+            sendText(adminId, res);
+            return sendSql();
+        }
+
         if (cmd.equals(ADMIN_SET)) {
             return setAdmin(msg);
         }
@@ -160,12 +174,6 @@ public class BotService extends TelegramLongPollingBot {
             return "Ping is " + isPing;
         }
 
-        if (cmd.equalsIgnoreCase("sqlBackup:")) {
-            var res = databaseDumpService.dumpTable(userCoinsService.getAllUserCoins());
-            sendText(adminId, res);
-            return sendSql();
-        }
-
         if (cmd.equals(REFRESH_COINS)) {
             coinMarketCapService.updateDatabase();
             return "Database is updated";
@@ -177,16 +185,6 @@ public class BotService extends TelegramLongPollingBot {
             return processCoinSymbolAndSubscribe(cmd, msg) + "\n ------- \n" + MENU;
         }
         return "Wrong command! Start again" + "\n ---- \n" + MENU;
-    }
-
-
-    private String sendOldLogs(int daysBack) {
-        LocalDateTime oldDay = LocalDateTime.now().minusDays(daysBack);
-        String date = oldDay.getYear() + "-" +
-                oldDay.getMonthValue() + "-" +
-                oldDay.getDayOfMonth();
-        sendDocument("logs/log-" + date + ".txt", "Logs");
-        return "";
     }
 
     private String setAdmin(Message msg) {
@@ -305,7 +303,13 @@ public class BotService extends TelegramLongPollingBot {
 
     public String sendLogs() {
         LocalDateTime now = LocalDateTime.now();
-        String date = now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth();
+        String date = now.format(formatter);
+        sendDocument("logs/log-" + date + ".txt", "Logs");
+        return "";
+    }
+    private String sendOldLogs(int daysBack) {
+        LocalDateTime oldDay = LocalDateTime.now().minusDays(daysBack);
+        String date = oldDay.format(formatter);
         sendDocument("logs/log-" + date + ".txt", "Logs");
         return "";
     }
@@ -315,12 +319,12 @@ public class BotService extends TelegramLongPollingBot {
         return "";
     }
 
-    private void sendDocument(String pathname, String SQL_backup) {
+    private void sendDocument(String pathname, String caption) {
         InputFile inputFile = new InputFile(new File(pathname));
         SendDocument sendDocumentRequest = new SendDocument();
         sendDocumentRequest.setChatId(adminId.toString());
         sendDocumentRequest.setDocument(inputFile);
-        sendDocumentRequest.setCaption(SQL_backup);
+        sendDocumentRequest.setCaption(caption);
         try {
             execute(sendDocumentRequest);
         } catch (TelegramApiException e) {

@@ -48,14 +48,13 @@ public class NotificationService {
         }
         lgr().info("DAILY UPDATE SENT " + LocalDateTime.now());
     }
+
     @Scheduled(cron = "0 58 23 * * *")
-    public void regularLogSend() throws InterruptedException {
+    public void regularLogAndSqlSend() throws InterruptedException {
         lgr().info("SENT " + botService.sendLogs());
-    }
-    @Scheduled(cron = "0 59 23 * * *")
-    public void regularSqlBackupSend() throws InterruptedException {
         lgr().info("SENT " + botService.sendSql());
     }
+
     @Scheduled(cron = "0 0 */3 * * *")
     public void pingOk() throws InterruptedException {
         lgr().info("PING OK");
