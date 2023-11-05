@@ -48,12 +48,12 @@ public class BotService extends TelegramLongPollingBot {
     //CREDENTIALS
     @Override
     public String getBotUsername() {
-        return realBotName;
+        return testBotName;
     }
 
     @Override
     public String getBotToken() {
-        return realBotToken;
+        return testBotToken;
     }
 
 

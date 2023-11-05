@@ -28,7 +28,7 @@ public class NotificationService {
 
 
     @PostConstruct //or @Bean
-    @Scheduled(cron = "0 30 3 * * *")
+    @Scheduled(cron = "0 0 */5 * * *")
     public void dbRefresh() {
         if (!coinMarketCapService.isCurrentdate()) {
             coinMarketCapService.updateDatabase();
@@ -64,7 +64,7 @@ public class NotificationService {
     @PostConstruct
     private void startupNotification(){
         botService.sendText(botService.getAdminId(), "Bot is started\n" +
-                "Commit: changed welcome message");
+                "Commit: Changed refresh time");
         Logger.lgr().info("Bot STARTED");
     }
 }
