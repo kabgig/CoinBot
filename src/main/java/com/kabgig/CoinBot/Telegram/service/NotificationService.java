@@ -30,7 +30,7 @@ public class NotificationService {
     @PostConstruct //or @Bean
     @Scheduled(cron = "0 0 */5 * * *")
     public void dbRefresh() {
-        if (!coinMarketCapService.isCurrentdate()) {
+        if (!coinMarketCapService.isCurrentdate() || true) {
             coinMarketCapService.updateDatabase();
             botService.sendText(botService.getAdminId(), "Database is updated");
             lgr().info("EXECUTED DAILY DATABASE REFRESH");
