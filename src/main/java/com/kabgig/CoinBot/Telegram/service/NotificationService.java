@@ -37,7 +37,7 @@ public class NotificationService {
         }
     }
 
-    @Scheduled(cron = "0 0 4 * * *")
+    @Scheduled(cron = "0 0 3 * * *")
     public void notifySubscribers() throws InterruptedException {
         List<ActiveChat> uniqueChats = activeChatService.getUniqueUsersChats();
         for (var chat : uniqueChats) {
@@ -64,7 +64,7 @@ public class NotificationService {
     @PostConstruct
     private void startupNotification(){
         botService.sendText(botService.getAdminId(), "Bot is started\n" +
-                "Commit: Changed refresh time");
+                "Commit: changed notification time");
         Logger.lgr().info("Bot STARTED");
     }
 }
